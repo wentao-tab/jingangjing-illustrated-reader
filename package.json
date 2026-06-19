@@ -1,0 +1,22 @@
+{
+  "name": "jingangjing-illustrated-reader",
+  "version": "0.1.0",
+  "description": "An illustrated reader of the Diamond Sutra with selected core lines and AI-generated ink-style images.",
+  "author": "Wentao",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/check": "0.9.9",
+    "astro": "6.4.4",
+    "sass": "^1.79.4",
+    "sharp": "^0.34.5",
+    "typescript": "^5.6.2"
+  }
+}

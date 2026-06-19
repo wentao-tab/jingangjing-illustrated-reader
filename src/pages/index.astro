@@ -1,0 +1,1491 @@
+---
+import MainHead from "../components/MainHead.astro";
+import { withBase } from "../utils/paths";
+
+const sourceUrl = "https://www.sutrasmantras.info/sutra01.html";
+const repoUrl = "https://github.com/wentao-tab/jingangjing-illustrated-reader";
+
+const chapterTitles = [
+	"法会因由分",
+	"善现启请分",
+	"大乘正宗分",
+	"妙行无住分",
+	"如理实见分",
+	"正信希有分",
+	"无得无说分",
+	"依法出生分",
+	"一相无相分",
+	"庄严净土分",
+	"无为福胜分",
+	"尊重正教分",
+	"如法受持分",
+	"离相寂灭分",
+	"持经功德分",
+	"能净业障分",
+	"究竟无我分",
+	"一体同观分",
+	"法界通化分",
+	"离色离相分",
+	"非说所说分",
+	"无法可得分",
+	"净心行善分",
+	"福智无比分",
+	"化无所化分",
+	"法身非相分",
+	"无断无灭分",
+	"不受不贪分",
+	"威仪寂静分",
+	"一合理相分",
+	"知见不生分",
+	"应化非真分",
+];
+
+const chapterNotes = [
+	["如是我闻，一时，佛在舍卫国祗树给孤独园，与大比丘众千二百五十人俱。", "故事从一次法会现场开始：佛与大众同在祇树给孤独园。", "祇园清晨，僧众安静入座，阳光落在钵盂与树影之间。"],
+	["云何应住？云何降伏其心？", "须菩提替所有想修行的人问出核心问题：心到底安放在哪里。", "长者合掌请问，庭院一角的水面映出不安的心。"],
+	["应如是降伏其心。所有一切众生之类，我皆令入无余涅槃而灭度之。", "发愿度众生，但不把众生、功劳和自我抓成实有。", "渡口薄雾中，行人过桥，摆渡者不留下姓名。"],
+	["菩萨于法，应无所住，行于布施。", "给予可以很认真，但心不要住在回报、身份和功德账本里。", "一只手递出灯火，另一只手没有索取，背景是安静街巷。"],
+	["凡所有相，皆是虚妄。若见诸相非相，即见如来。", "所有外相都不是最后答案；能看见相的松动，才接近真实。", "铜镜照见花影，镜面微微起雾，人物站在光外。"],
+	["信心清净，则生实相。", "真正的信不是迷信，而是心清净到不再被表象拖走。", "竹林中一束清光穿过尘埃，年轻行者停下脚步。"],
+	["如来所说法，皆不可取、不可说，非法、非非法。", "法是渡河的筏，不是拿来收藏和争论的标签。", "河岸边一只竹筏停靠，远处有人已上岸回望。"],
+	["一切诸佛，及诸佛阿耨多罗三藐三菩提法，皆从此经出。", "这部经的价值在于它不断把人从执着里松开。", "古旧经卷在桌上展开，字迹之外是辽阔山水。"],
+	["须陀洹名为入流，而无所入。", "修行不是获得一个更高级的身份，而是少一点自我占有。", "溪流入江，没有牌匾，只有水纹自然汇合。"],
+	["不应住色生心，不应住声香味触法生心。", "心不必被外界牵着走，净土先从不执着开始。", "城门之外，风吹幡动，人心却不跟着摇摆。"],
+	["若福德有实，如来不说得福德多。", "福德越大，越不能把它抓成一个可炫耀的东西。", "星夜下满地灯盏，有一盏被悄悄放到路边。"],
+	["当知是经义不可思议，果报亦不可思议。", "真正重要的法，需要被尊重、被受持，而不是被浅尝辄止。", "经卷被置于素净案上，檀香烟气缓慢上升。"],
+	["应如是生清净心。", "清净心不是逃离生活，而是在生活中不被相绑住。", "雨后庭院，瓦檐滴水，行者把鞋摆正后入室。"],
+	["离一切诸相，则名诸佛。", "离相不是否认世界，而是不让任何相替代真实。", "山间云雾散开，人物背影与远峰相互让出空间。"],
+	["若有善男子、善女人，初日分以恒河沙等身布施。", "再大的外在付出，也比不上真正理解并转化一念执着。", "恒河沙岸，沙粒与星光连成一片，人物放下满篮珍宝。"],
+	["先世罪业，则为消灭。", "业障被看见、被承受、被转化，心才真正轻下来。", "破旧墙面前，行者擦去尘土，露出温和的光。"],
+	["实无有法，发阿耨多罗三藐三菩提心者。", "连“我在发心”也不能住，修行才不会变成新的自我包装。", "莲池边，合掌的人影倒映在水中又被涟漪散开。"],
+	["如来有肉眼、天眼、慧眼、法眼、佛眼。", "看见不只是一种视觉，也是一种穿透分别的能力。", "五重圆窗望向同一片山河，每一层光色不同。"],
+	["若心有住，则为非住。", "心一旦固定在某个结论上，就失去真正的自由。", "风翻书页，墨迹未干，窗外云影正在移动。"],
+	["不可以色身见如来。", "不要把真实局限在可见的形体上。", "佛像只露出半身，真正的光落在空处与众人脸上。"],
+	["说法者，无法可说，是名说法。", "最深的表达，常常不是占有真理，而是指向真理。", "讲法者指向月光，听者看见的不是手指。"],
+	["于法实无所得。", "所谓得到，很多时候只是心又抓住了一个新对象。", "空钵放在石阶上，里面只有天空的倒影。"],
+	["应无所住而生其心。", "这句是全经的心脏：进入世界做事，但不被世界黏住。", "市集中人来人往，一人提灯穿行，灯光不占有任何人。"],
+	["若三千大千世界中所有诸须弥山王，如是等七宝聚，有人持用布施。", "智慧不是反对福德，而是让福德不再变成执着。", "宝塔与山河并置，塔光很亮，远处一卷经更安静。"],
+	["实无有众生如来度者。", "帮助别人时，不把自己放在拯救者的位置。", "渡船到岸，船夫转身修补绳结，没有看向掌声。"],
+	["若以三十二相观如来者，转轮圣王即是如来。", "看相容易，看见相背后的空性很难。", "华丽王冠置于桌上，旁边是一盏朴素油灯。"],
+	["发阿耨多罗三藐三菩提心者，于法不说断灭相。", "不执着不是虚无；放下相，也不等于否定因果和善行。", "枯枝旁新芽冒出，冬雾里有很淡的春色。"],
+	["菩萨所作福德，不应贪著。", "行善后不贪著，善才不会反过来占据心。", "布施后的空篮放在门口，主人已经走远。"],
+	["如来者，无所从来，亦无所去，故名如来。", "真实不在来去之间，也不被时间和位置限制。", "长路尽头没有人影，只有晨雾在山门间流动。"],
+	["一合相者，即是不可说。", "世界看似合成一个整体，但任何定义都无法把它说尽。", "碎瓦、树叶、流水、衣角在同一画面中自然相连。"],
+	["不应生法相。", "连“我懂了”的知见也要放下，否则又成了新的相。", "读经者合上书，室内安静，窗外鸟影掠过。"],
+	["一切有为法，如梦幻泡影，如露亦如电，应作如是观。", "结尾把全经收束为一种观看方式：认真活着，也知道一切流动不居。", "清晨露珠、闪电余光与水中泡影同框，行者在远处回身。"],
+];
+
+const secondCardSentences = [
+	"尔时，世尊食时，著衣持钵，入舍卫大城乞食。",
+	"汝今谛听！当为汝说：善男子、善女人，发阿耨多罗三藐三菩提心，应如是住，如是降伏其心。",
+	"如是灭度无量无数无边众生，实无众生得灭度者。",
+	"何以故？若菩萨不住相布施，其福德不可思量。",
+	"不也，世尊！不可以身相得见如来。",
+	"如来灭后，后五百岁，有持戒修福者，于此章句能生信心，以此为实。",
+	"如来有所说法耶？须菩提言：如我解佛所说义，无有定法名阿耨多罗三藐三菩提，亦无有定法，如来可说。",
+	"何以故？是福德即非福德性，是故如来说福德多。",
+	"须陀洹名为入流，而无所入，不入色声香味触法，是名须陀洹。",
+	"如来昔在然灯佛所，于法有所得不？",
+	"是诸恒河沙宁为多不？须菩提言：甚多，世尊！",
+	"须菩提！当知是人成就最上第一希有之法。",
+	"是经名为《金刚般若波罗蜜》，以是名字，汝当奉持。",
+	"佛说如是甚深经典，我从昔来所得慧眼，未曾得闻如是之经。",
+	"须菩提！以要言之，是经有不可思议、不可称量、无边功德。",
+	"以今世人轻贱故，先世罪业则为消灭，当得阿耨多罗三藐三菩提。",
+	"善男子、善女人，发阿耨多罗三藐三菩提心，云何应住？云何降伏其心？",
+	"过去心不可得，现在心不可得，未来心不可得。",
+	"若福德有实，如来不说得福德多；以福德无故，如来说得福德多。",
+	"如来不应以具足色身见。",
+	"若人言：如来有所说法，即为谤佛，不能解我所说故。",
+	"我于阿耨多罗三藐三菩提乃至无有少法可得。",
+	"所言善法者，如来说即非善法，是名善法。",
+	"若人以此《般若波罗蜜经》，乃至四句偈等，受持、为他人说，其福胜彼。",
+	"若有众生如来度者，如来则有我、人、众生、寿者。",
+	"若以色见我，以音声求我，是人行邪道，不能见如来。",
+	"发阿耨多罗三藐三菩提心者，说诸法断灭。莫作是念！",
+	"若复有人知一切法无我，得成于忍，此菩萨胜前菩萨所得功德。",
+	"若有人言：如来若来若去、若坐若卧，是人不解我所说义。",
+	"一合相者，则是不可说，但凡夫之人贪著其事。",
+	"于一切法，应如是知，如是见，如是信解，不生法相。",
+	"云何为人演说，不取于相，如如不动。",
+];
+
+const secondCardPlains = [
+	"佛陀入城乞食、饭后洗足而坐，说明法从日常生活中展开。",
+	"佛先让须菩提专心听，然后把“安住其心”的方法正式展开。",
+	"真正度众生时，不把“我度了众生”抓成自己的功劳。",
+	"不住相去布施，福德才不会被自我和回报心限制。",
+];
+
+const makePrompt = (visual: string, index: number) =>
+	`16:9 Chinese ink watercolor Buddhist sutra illustration. Scene: ${visual} Composition panel ${index + 1}, quiet cinematic framing, ivory rice-paper texture, pale mineral washes, thin sepia line art, restrained gold and pine green accents. No readable writing, no captions, no logo, no watermark.`;
+
+const imageForCard = (chapter: number, sentence: number) =>
+	chapter <= 32 ? withBase(`/assets/jingangjing/c${String(chapter).padStart(2, "0")}-s${String(sentence).padStart(2, "0")}.png`) : "";
+
+const chapters = chapterTitles.map((title, index) => {
+	const [quote, plain, visual] = chapterNotes[index];
+	const chapter = index + 1;
+	return {
+		chapter,
+		title,
+		gist: plain,
+		text: quote,
+		cards: [
+			{
+				id: `c${chapter}-s01`,
+				sentence: quote,
+				plain,
+				image: imageForCard(chapter, 1),
+				prompt: makePrompt(visual, index),
+			},
+			{
+				id: `c${chapter}-s02`,
+				sentence: secondCardSentences[index],
+				plain: secondCardPlains[index] ?? `这一句承接「${title}」，继续把本品主题推向“不住相”的理解。`,
+				image: imageForCard(chapter, 2),
+				prompt: makePrompt(`${visual} A second quieter frame focused on hands, objects, and empty space.`, index),
+			},
+		],
+	};
+});
+---
+
+<html lang="zh-CN">
+	<head>
+		<MainHead
+			title="金刚经配图版"
+			description="把《金刚经》拆成逐品图文卡片：经文摘句、白话解释和水墨配图提示。"
+			keywords="金刚经,配图版,佛经,图文阅读,水墨插画"
+		/>
+	</head>
+	<body class="sutra-tool-body">
+	<main class="sutra-reader" data-page-root>
+		<header class="sutra-topbar">
+			<a class="sutra-brand" href={withBase("/")} aria-label="返回首页">
+				<span class="brand-mark" aria-hidden="true">
+					<span class="brand-glyph">金</span>
+					<span class="brand-line"></span>
+				</span>
+				<span>
+					<span class="brand-eyebrow">Vajracchedika · Illustrated Reader</span>
+					<strong>金刚经配图版</strong>
+					<em>应无所住，而生其心</em>
+				</span>
+			</a>
+			<div class="sutra-mantra" aria-hidden="true">
+				<span>如露亦如电</span>
+				<i></i>
+				<span>应作如是观</span>
+			</div>
+			<nav class="reader-actions" aria-label="阅读操作">
+				<button class="audio-toggle" type="button" data-audio-toggle aria-pressed="false" aria-label="播放诵读音频">
+					<span class="audio-orb" aria-hidden="true">
+						<span></span>
+						<span></span>
+						<span></span>
+					</span>
+					<span class="audio-copy">
+						<strong data-audio-label>诵读</strong>
+						<em data-audio-state>点击播放</em>
+					</span>
+				</button>
+				<a class="reader-link" href={sourceUrl} target="_blank" rel="noreferrer">原文来源</a>
+				<a class="reader-link" href={repoUrl} target="_blank" rel="noreferrer">开源仓库</a>
+			</nav>
+			<audio data-sutra-audio preload="metadata">
+				<source src={withBase("/assets/jingangjing/1009.mp3")} type="audio/mpeg" />
+			</audio>
+		</header>
+
+		<div class="reader-shell">
+			<aside class="chapter-rail" aria-label="三十二品目录">
+				<div class="rail-title" data-rail-title>第 01 品 · 法会因由分</div>
+				<div class="chapter-list">
+					{chapters.map((chapter) => (
+						<button class:list={["chapter-button", chapter.chapter === 1 && "active"]} type="button" data-chapter-target={chapter.chapter}>
+							<span>{String(chapter.chapter).padStart(2, "0")}</span>
+							<strong>{chapter.title}</strong>
+						</button>
+					))}
+				</div>
+			</aside>
+
+			<section class="reading-pane" aria-live="polite">
+				{chapters.map((chapter) => (
+					<article class:list={["chapter-panel", chapter.chapter === 1 && "active"]} data-chapter-panel={chapter.chapter}>
+						<header class="chapter-header">
+							<div class="chapter-kicker">第 {chapter.chapter} 品</div>
+							<div class="chapter-title-row">
+								<h1>{chapter.title}</h1>
+								<div class="chapter-stepper">
+									<button class="step-button" type="button" data-move="-1" aria-label="上一品">‹</button>
+									<select aria-label="选择品目" data-chapter-select>
+										{chapters.map((item) => (
+											<option value={item.chapter} selected={item.chapter === chapter.chapter}>
+												{String(item.chapter).padStart(2, "0")} {item.title}
+											</option>
+										))}
+									</select>
+									<button class="step-button" type="button" data-move="1" aria-label="下一品">›</button>
+								</div>
+							</div>
+							<p class="chapter-gist">{chapter.gist}</p>
+							<p class="chapter-text">{chapter.text}</p>
+						</header>
+
+						<div class="manga-grid">
+							{chapter.cards.map((card, cardIndex) => (
+								<article class="manga-card" id={card.id}>
+									<div class="panel-meta">
+										<span>第 {chapter.chapter} 品</span>
+										<strong>{String(cardIndex + 1).padStart(2, "0")}</strong>
+									</div>
+									<button
+										class="comic-frame-button"
+										type="button"
+										data-open-card={card.id}
+										data-chapter={chapter.chapter}
+										data-index={cardIndex}
+										data-title={`第 ${chapter.chapter} 品 · ${cardIndex + 1}/${chapter.cards.length}`}
+										data-sentence={card.sentence}
+										data-plain={card.plain}
+										data-prompt={card.prompt}
+										data-image={card.image}
+										aria-label={`打开第 ${chapter.chapter} 品第 ${cardIndex + 1} 张配图`}
+									>
+										{card.image ? (
+											<img
+												class="comic-image"
+												src={card.image}
+												alt={`第 ${chapter.chapter} 品第 ${cardIndex + 1} 张配图：${card.sentence}`}
+												loading={chapter.chapter === 1 ? "eager" : "lazy"}
+											/>
+										) : (
+											<div class={`comic-fallback fallback-${cardIndex % 5}`} aria-label={card.prompt}>
+												<span class="ink-sun"></span>
+												<span class="ink-mountain one"></span>
+												<span class="ink-mountain two"></span>
+												<span class="ink-river"></span>
+												<span class="ink-figure"></span>
+												<span class="fallback-label">
+													<span>配图提示词已生成</span>
+													<strong>{chapter.chapter}.{cardIndex + 1}</strong>
+												</span>
+											</div>
+										)}
+									</button>
+									<div class="dialogue">
+										<p class="original">{card.sentence}</p>
+										<p class="plain">{card.plain}</p>
+									</div>
+								</article>
+							))}
+						</div>
+					</article>
+				))}
+			</section>
+		</div>
+
+		<footer class="sutra-footer">
+			<span>原文《金刚经》提炼每一品最能代表主题的核心句整理</span>
+			<span>@文韬推荐</span>
+		</footer>
+
+		<div class="lightbox-backdrop" data-lightbox hidden>
+			<section class="lightbox-panel" role="dialog" aria-modal="true" aria-label="配图阅读">
+				<div class="lightbox-top">
+					<span data-lightbox-title>第 1 品 · 1/2</span>
+					<button class="step-button lightbox-close" type="button" data-close-lightbox aria-label="关闭">×</button>
+				</div>
+				<div class="lightbox-stage">
+					<button class="lightbox-nav previous" type="button" data-lightbox-move="-1" aria-label="上一张">‹</button>
+					<div class="lightbox-art fallback-0" data-lightbox-art>
+						<span class="ink-sun"></span>
+						<span class="ink-mountain one"></span>
+						<span class="ink-mountain two"></span>
+						<span class="ink-river"></span>
+						<span class="ink-figure"></span>
+					</div>
+					<button class="lightbox-nav next" type="button" data-lightbox-move="1" aria-label="下一张">›</button>
+				</div>
+				<div class="lightbox-text">
+					<p class="lightbox-original" data-lightbox-sentence></p>
+					<p class="lightbox-plain" data-lightbox-plain></p>
+					<details>
+						<summary>配图提示词</summary>
+						<p data-lightbox-prompt></p>
+					</details>
+				</div>
+			</section>
+		</div>
+	</main>
+	</body>
+</html>
+
+<script>
+	// @ts-nocheck
+	const chapterMeta = Array.from(document.querySelectorAll("[data-chapter-target]")).map((button) => ({
+		chapter: Number(button.dataset.chapterTarget),
+		title: button.querySelector("strong")?.textContent?.trim() ?? "",
+	}));
+	const chapters = [...document.querySelectorAll("[data-chapter-panel]")];
+	const chapterButtons = [...document.querySelectorAll("[data-chapter-target]")];
+	const selects = [...document.querySelectorAll("[data-chapter-select]")];
+	const cardButtons = [...document.querySelectorAll("[data-open-card]")];
+	const lightbox = document.querySelector("[data-lightbox]");
+	const railTitle = document.querySelector("[data-rail-title]");
+	const sutraAudio = document.querySelector("[data-sutra-audio]");
+	const audioToggle = document.querySelector("[data-audio-toggle]");
+	const audioState = document.querySelector("[data-audio-state]");
+	let activeChapter = 1;
+	let activeCard = 0;
+
+	function showChapter(next) {
+		const clamped = Math.max(1, Math.min(chapters.length, Number(next)));
+		activeChapter = clamped;
+		chapters.forEach((panel) => panel.classList.toggle("active", Number(panel.dataset.chapterPanel) === clamped));
+		chapterButtons.forEach((button) => button.classList.toggle("active", Number(button.dataset.chapterTarget) === clamped));
+		selects.forEach((select) => (select.value = String(clamped)));
+		const current = chapterMeta.find((item) => item.chapter === clamped);
+		if (railTitle && current) railTitle.textContent = `第 ${String(clamped).padStart(2, "0")} 品 · ${current.title}`;
+		window.scrollTo({ top: 0, behavior: "smooth" });
+	}
+
+	function setLightboxFromButton(button) {
+		activeChapter = Number(button.dataset.chapter);
+		activeCard = Number(button.dataset.index);
+		showChapter(activeChapter);
+		document.querySelector("[data-lightbox-title]").textContent = button.dataset.title;
+		document.querySelector("[data-lightbox-sentence]").textContent = button.dataset.sentence;
+		document.querySelector("[data-lightbox-plain]").textContent = button.dataset.plain;
+		document.querySelector("[data-lightbox-prompt]").textContent = button.dataset.prompt;
+		const art = document.querySelector("[data-lightbox-art]");
+		art.className = `lightbox-art fallback-${activeCard % 5}`;
+		art.style.backgroundImage = "";
+		if (button.dataset.image) {
+			art.classList.add("has-image");
+			art.style.backgroundImage = `url("${button.dataset.image}")`;
+		}
+		lightbox.hidden = false;
+		document.body.classList.add("sutra-lightbox-open");
+	}
+
+	function setAudioPlaying(isPlaying) {
+		document.body.classList.toggle("sutra-audio-playing", isPlaying);
+		document.body.classList.remove("sutra-audio-blocked");
+		audioToggle?.setAttribute("aria-pressed", String(isPlaying));
+		audioToggle?.setAttribute("aria-label", isPlaying ? "暂停诵读音频" : "播放诵读音频");
+		if (audioState) audioState.textContent = isPlaying ? "播放中" : "点击播放";
+	}
+
+	function setAudioBlocked(error) {
+		document.body.classList.remove("sutra-audio-playing");
+		document.body.classList.add("sutra-audio-blocked");
+		audioToggle?.setAttribute("aria-pressed", "false");
+		if (audioToggle && error) audioToggle.dataset.audioError = error.name ?? "play-error";
+		if (audioState) audioState.textContent = "再点一次";
+	}
+
+	chapterButtons.forEach((button) => button.addEventListener("click", () => showChapter(button.dataset.chapterTarget)));
+	selects.forEach((select) => select.addEventListener("change", () => showChapter(select.value)));
+	document.querySelectorAll("[data-move]").forEach((button) => {
+		button.addEventListener("click", () => showChapter(activeChapter + Number(button.dataset.move)));
+	});
+	cardButtons.forEach((button) => button.addEventListener("click", () => setLightboxFromButton(button)));
+	audioToggle?.addEventListener("click", async () => {
+		if (!sutraAudio) return;
+		if (sutraAudio.paused) {
+			try {
+				if (sutraAudio.readyState === 0) sutraAudio.load();
+				await sutraAudio.play();
+			} catch (error) {
+				setAudioBlocked(error);
+			}
+		} else {
+			sutraAudio.pause();
+		}
+	});
+	sutraAudio?.addEventListener("play", () => setAudioPlaying(true));
+	sutraAudio?.addEventListener("pause", () => setAudioPlaying(false));
+	sutraAudio?.addEventListener("ended", () => setAudioPlaying(false));
+	document.querySelector("[data-close-lightbox]")?.addEventListener("click", () => {
+		lightbox.hidden = true;
+		document.body.classList.remove("sutra-lightbox-open");
+	});
+	document.querySelectorAll("[data-lightbox-move]").forEach((button) => {
+		button.addEventListener("click", () => {
+			const currentGlobalIndex = cardButtons.findIndex((item) => Number(item.dataset.chapter) === activeChapter && Number(item.dataset.index) === activeCard);
+			const nextGlobalIndex = Math.max(0, Math.min(cardButtons.length - 1, currentGlobalIndex + Number(button.dataset.lightboxMove)));
+			setLightboxFromButton(cardButtons[nextGlobalIndex]);
+		});
+	});
+	lightbox?.addEventListener("click", (event) => {
+		if (event.target === lightbox) {
+			lightbox.hidden = true;
+			document.body.classList.remove("sutra-lightbox-open");
+		}
+	});
+	window.addEventListener("keydown", (event) => {
+		if (event.key === "Escape" && !lightbox.hidden) {
+			lightbox.hidden = true;
+			document.body.classList.remove("sutra-lightbox-open");
+		}
+	});
+</script>
+
+<style lang="scss">
+	:global(html),
+	:global(body.sutra-tool-body) {
+		min-width: 320px;
+		margin: 0;
+		background: #f5efe1;
+	}
+
+	:global(body.sutra-tool-body) {
+		overflow-x: hidden;
+	}
+
+	:global(body.sutra-lightbox-open) {
+		overflow: hidden;
+	}
+
+	.sutra-reader {
+		--paper: #f5efe1;
+		--paper-strong: #fffaf0;
+		--ink: #15242b;
+		--ink-soft: #425057;
+		--line: rgba(21, 36, 43, 0.14);
+		--pine: #2f655b;
+		--pine-deep: #17443d;
+		--cinnabar: #9f4135;
+		--gold: #b7893b;
+		--shadow: 0 18px 50px rgba(25, 31, 33, 0.13);
+		min-height: 100vh;
+		color: var(--ink);
+		background:
+			linear-gradient(90deg, rgba(21, 36, 43, 0.04) 1px, transparent 1px),
+			linear-gradient(180deg, #f7f1e5, #e9efea 48%, #f4ead9);
+		background-size: 34px 34px, auto;
+		font-family: Iowan Old Style, Songti SC, "Noto Serif CJK SC", PingFang SC, serif;
+	}
+
+	.sutra-topbar {
+		position: sticky;
+		top: 0;
+		z-index: 20;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 16px;
+		min-height: 88px;
+		padding: 14px max(18px, calc((100vw - 1440px) / 2 + 24px));
+		border-bottom: 1px solid rgba(143, 111, 53, 0.22);
+		background:
+			linear-gradient(90deg, rgba(159, 65, 53, 0.08), transparent 18%, transparent 82%, rgba(47, 101, 91, 0.08)),
+			radial-gradient(circle at 18% 20%, rgba(183, 137, 59, 0.16), transparent 28%),
+			rgba(246, 240, 226, 0.94);
+		backdrop-filter: blur(18px);
+		box-shadow: 0 10px 34px rgba(37, 31, 20, 0.06);
+		overflow: hidden;
+
+		> * {
+			position: relative;
+			z-index: 1;
+		}
+
+		&::before {
+			content: "";
+			position: absolute;
+			inset: 0;
+			z-index: 0;
+			opacity: 0;
+			background:
+				radial-gradient(circle at 68% 42%, rgba(255, 250, 240, 0.78), transparent 16%),
+				linear-gradient(100deg, transparent 4%, rgba(183, 137, 59, 0.14) 20%, transparent 38%, rgba(47, 101, 91, 0.12) 54%, transparent 74%);
+			background-size: 180% 100%, 210% 100%;
+			pointer-events: none;
+			transition: opacity 0.35s ease;
+		}
+
+		&::after {
+			content: "";
+			position: absolute;
+			left: max(18px, calc((100vw - 1440px) / 2 + 24px));
+			right: max(18px, calc((100vw - 1440px) / 2 + 24px));
+			bottom: 9px;
+			z-index: 1;
+			height: 1px;
+			background: linear-gradient(90deg, transparent, rgba(159, 65, 53, 0.34), rgba(183, 137, 59, 0.34), transparent);
+			pointer-events: none;
+		}
+	}
+
+	:global(body.sutra-audio-playing) .sutra-topbar::before {
+		opacity: 1;
+		animation: sutraSoundWash 8s ease-in-out infinite;
+	}
+
+	.sutra-brand {
+		display: flex;
+		align-items: center;
+		min-width: 0;
+		gap: 14px;
+		color: inherit;
+		text-decoration: none;
+
+		strong,
+		em {
+			display: block;
+			font-style: normal;
+			letter-spacing: 0;
+		}
+
+		strong {
+			font-size: 25px;
+			line-height: 1.1;
+			font-weight: 700;
+		}
+
+		em {
+			margin-top: 6px;
+			color: var(--pine-deep);
+			font-family: "Huiwen-mincho", Songti SC, STSong, serif;
+			font-size: 14px;
+		}
+	}
+
+	.brand-eyebrow {
+		display: block;
+		margin-bottom: 4px;
+		color: rgba(159, 65, 53, 0.76);
+		font-family: Iowan Old Style, Georgia, serif;
+		font-size: 11px;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.brand-mark {
+		position: relative;
+		display: grid;
+		place-items: center;
+		width: 54px;
+		height: 54px;
+		flex: 0 0 auto;
+		overflow: hidden;
+		border: 1px solid rgba(159, 65, 53, 0.36);
+		border-radius: 10px;
+		background:
+			linear-gradient(135deg, rgba(159, 65, 53, 0.12), transparent 44%),
+			linear-gradient(315deg, rgba(183, 137, 59, 0.18), transparent 42%),
+			#fff8ea;
+		color: var(--cinnabar);
+		box-shadow:
+			inset 0 0 0 4px rgba(255, 250, 240, 0.72),
+			inset 0 0 0 5px rgba(159, 65, 53, 0.08),
+			0 8px 22px rgba(91, 63, 32, 0.12);
+
+		&::before,
+		&::after {
+			content: "";
+			position: absolute;
+			inset: 7px;
+			border: 1px solid rgba(183, 137, 59, 0.34);
+			border-radius: 7px;
+		}
+
+		&::after {
+			inset: 13px;
+			border-color: rgba(47, 101, 91, 0.18);
+		}
+	}
+
+	.brand-glyph {
+		position: relative;
+		z-index: 1;
+		font-size: 31px;
+		font-weight: 800;
+		line-height: 1;
+	}
+
+	.brand-line {
+		position: absolute;
+		right: 8px;
+		bottom: 9px;
+		width: 24px;
+		height: 7px;
+		border-top: 2px solid rgba(47, 101, 91, 0.5);
+		border-bottom: 2px solid rgba(183, 137, 59, 0.28);
+		border-radius: 999px;
+		transform: rotate(-9deg);
+	}
+
+	.sutra-mantra {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 13px;
+		flex: 1 1 auto;
+		min-width: 220px;
+		color: rgba(21, 36, 43, 0.58);
+		font-family: "Huiwen-mincho", Songti SC, STSong, serif;
+		font-size: 16px;
+		white-space: nowrap;
+
+		i {
+			display: block;
+			width: 34px;
+			height: 1px;
+			background: linear-gradient(90deg, transparent, rgba(159, 65, 53, 0.42), transparent);
+		}
+	}
+
+	.reader-actions {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 8px;
+		flex-wrap: wrap;
+	}
+
+	[data-sutra-audio] {
+		display: none;
+	}
+
+	.audio-toggle {
+		position: relative;
+		display: inline-flex;
+		align-items: center;
+		gap: 9px;
+		min-width: 126px;
+		height: 42px;
+		padding: 0 12px 0 10px;
+		overflow: hidden;
+		border: 1px solid rgba(143, 111, 53, 0.25);
+		border-radius: 999px;
+		background:
+			linear-gradient(180deg, rgba(255, 252, 244, 0.94), rgba(245, 236, 216, 0.8)),
+			rgba(255, 250, 240, 0.86);
+		color: var(--ink);
+		cursor: pointer;
+		box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.62), 0 7px 18px rgba(37, 31, 20, 0.06);
+		transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
+
+		&:hover {
+			transform: translateY(-1px);
+			border-color: rgba(159, 65, 53, 0.36);
+			box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72), 0 9px 22px rgba(37, 31, 20, 0.09);
+		}
+	}
+
+	.audio-orb {
+		position: relative;
+		display: grid;
+		place-items: center;
+		width: 26px;
+		height: 26px;
+		flex: 0 0 auto;
+		border-radius: 999px;
+		background:
+			radial-gradient(circle, rgba(255, 250, 240, 0.95) 0 31%, transparent 32%),
+			radial-gradient(circle, rgba(183, 137, 59, 0.24), rgba(159, 65, 53, 0.12));
+		box-shadow: inset 0 0 0 1px rgba(159, 65, 53, 0.25);
+
+		span {
+			position: absolute;
+			bottom: 7px;
+			width: 3px;
+			border-radius: 999px;
+			background: var(--pine);
+			opacity: 0.78;
+		}
+
+		span:nth-child(1) {
+			left: 8px;
+			height: 8px;
+		}
+
+		span:nth-child(2) {
+			left: 12px;
+			height: 12px;
+		}
+
+		span:nth-child(3) {
+			left: 16px;
+			height: 6px;
+		}
+	}
+
+	.audio-copy {
+		display: grid;
+		gap: 1px;
+		min-width: 0;
+		text-align: left;
+
+		strong,
+		em {
+			display: block;
+			font-style: normal;
+			letter-spacing: 0;
+			white-space: nowrap;
+		}
+
+		strong {
+			font-family: PingFang SC, sans-serif;
+			font-size: 13px;
+			font-weight: 700;
+			line-height: 1.1;
+		}
+
+		em {
+			color: rgba(21, 36, 43, 0.55);
+			font-family: PingFang SC, sans-serif;
+			font-size: 11px;
+			line-height: 1.1;
+		}
+	}
+
+	:global(body.sutra-audio-playing) .audio-toggle {
+		border-color: rgba(183, 137, 59, 0.5);
+		box-shadow: 0 0 0 3px rgba(183, 137, 59, 0.1), 0 10px 24px rgba(37, 31, 20, 0.1);
+	}
+
+	:global(body.sutra-audio-blocked) .audio-toggle {
+		border-color: rgba(159, 65, 53, 0.4);
+	}
+
+	:global(body.sutra-audio-playing) .audio-orb {
+		animation: sutraPulse 2.4s ease-in-out infinite;
+
+		span:nth-child(1) {
+			animation: sutraBars 0.9s ease-in-out infinite;
+		}
+
+		span:nth-child(2) {
+			animation: sutraBars 0.9s ease-in-out 0.16s infinite;
+		}
+
+		span:nth-child(3) {
+			animation: sutraBars 0.9s ease-in-out 0.32s infinite;
+		}
+	}
+
+	.reader-link,
+	.step-button {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 40px;
+		height: 40px;
+		border: 1px solid rgba(143, 111, 53, 0.24);
+		border-radius: 8px;
+		background:
+			linear-gradient(180deg, rgba(255, 252, 244, 0.92), rgba(245, 236, 216, 0.76)),
+			rgba(255, 250, 240, 0.82);
+		color: var(--ink);
+		text-decoration: none;
+		cursor: pointer;
+		box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.62), 0 7px 18px rgba(37, 31, 20, 0.06);
+		transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease;
+	}
+
+	.reader-link {
+		width: auto;
+		padding: 0 14px;
+		font-family: PingFang SC, sans-serif;
+		font-size: 14px;
+		white-space: nowrap;
+	}
+
+	.reader-link:hover,
+	.step-button:hover {
+		transform: translateY(-1px);
+		border-color: rgba(159, 65, 53, 0.34);
+		background: #fffaf0;
+		text-decoration: none;
+	}
+
+	.reader-shell {
+		display: grid;
+		grid-template-columns: 286px minmax(0, 1fr);
+		gap: 28px;
+		width: min(1440px, 100%);
+		margin: 0 auto;
+		padding: 24px;
+	}
+
+	.chapter-rail {
+		position: sticky;
+		top: 98px;
+		align-self: start;
+		height: calc(100dvh - 122px);
+		border: 1px solid var(--line);
+		border-radius: 8px;
+		background: rgba(255, 250, 240, 0.72);
+		box-shadow: var(--shadow);
+		overflow: hidden;
+	}
+
+	.rail-title {
+		display: flex;
+		align-items: center;
+		height: 52px;
+		padding: 0 16px;
+		border-bottom: 1px solid var(--line);
+		color: var(--pine-deep);
+		font-family: PingFang SC, sans-serif;
+		font-weight: 700;
+	}
+
+	.chapter-list {
+		height: calc(100% - 52px);
+		overflow: auto;
+		padding: 8px;
+	}
+
+	.chapter-button {
+		display: grid;
+		grid-template-columns: 38px minmax(0, 1fr);
+		align-items: center;
+		width: 100%;
+		min-height: 46px;
+		padding: 7px 8px;
+		border: 0;
+		border-radius: 7px;
+		background: transparent;
+		color: var(--ink);
+		text-align: left;
+		cursor: pointer;
+
+		span {
+			display: grid;
+			place-items: center;
+			width: 30px;
+			height: 30px;
+			border-radius: 999px;
+			background: rgba(21, 36, 43, 0.07);
+			color: var(--ink-soft);
+			font-family: PingFang SC, sans-serif;
+			font-size: 12px;
+		}
+
+		strong {
+			min-width: 0;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			font-size: 15px;
+		}
+
+		&:hover,
+		&.active {
+			background: rgba(47, 101, 91, 0.11);
+		}
+
+		&.active span {
+			background: var(--pine);
+			color: #fff;
+		}
+	}
+
+	.chapter-panel {
+		display: none;
+
+		&.active {
+			display: block;
+		}
+	}
+
+	.chapter-header {
+		padding: 30px;
+		border: 1px solid var(--line);
+		border-radius: 8px;
+		background:
+			linear-gradient(135deg, rgba(47, 101, 91, 0.12), transparent 34%),
+			linear-gradient(315deg, rgba(159, 65, 53, 0.12), transparent 38%),
+			rgba(255, 250, 240, 0.86);
+		box-shadow: var(--shadow);
+	}
+
+	.chapter-kicker {
+		color: var(--ink-soft);
+		font-family: PingFang SC, sans-serif;
+		font-size: 14px;
+	}
+
+	.chapter-title-row {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+		align-items: center;
+		gap: 18px;
+		margin-top: 16px;
+
+		h1 {
+			margin: 0;
+			color: var(--ink);
+			font-size: 46px;
+			line-height: 1.05;
+			letter-spacing: 0;
+			text-align: left;
+		}
+	}
+
+	.chapter-stepper {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+
+		select {
+			width: 190px;
+			max-width: 42vw;
+			height: 40px;
+			padding: 0 12px;
+			border: 1px solid rgba(21, 36, 43, 0.16);
+			border-radius: 8px;
+			background: rgba(255, 255, 255, 0.82);
+			color: var(--ink);
+		}
+	}
+
+	.chapter-gist {
+		margin: 14px 0 0;
+		max-width: 840px;
+		color: var(--pine-deep);
+		font-family: PingFang SC, sans-serif;
+		font-size: 17px;
+		line-height: 1.7;
+	}
+
+	.chapter-text {
+		margin: 18px 0 0;
+		color: #263840;
+		font-size: 22px;
+		line-height: 1.9;
+	}
+
+	.manga-grid {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 22px;
+		align-items: stretch;
+		margin-top: 22px;
+	}
+
+	.manga-card {
+		--card-text-height: 194px;
+		display: grid;
+		grid-template-rows: 44px auto var(--card-text-height);
+		min-width: 0;
+		overflow: hidden;
+		border: 1px solid rgba(21, 36, 43, 0.14);
+		border-radius: 8px;
+		background: #fffaf0;
+		box-shadow: 0 12px 35px rgba(21, 36, 43, 0.1);
+	}
+
+	.panel-meta {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		height: 44px;
+		padding: 0 14px;
+		border-bottom: 1px solid rgba(21, 36, 43, 0.11);
+		color: var(--ink-soft);
+		font-family: PingFang SC, sans-serif;
+		font-size: 13px;
+
+		strong {
+			color: var(--cinnabar);
+			font-size: 16px;
+		}
+	}
+
+	.comic-frame-button {
+		display: block;
+		width: 100%;
+		padding: 0;
+		border: 0;
+		background: transparent;
+		color: inherit;
+		cursor: zoom-in;
+	}
+
+	.comic-image {
+		display: block;
+		width: 100%;
+		aspect-ratio: 16 / 9;
+		object-fit: cover;
+		background: #efe7d6;
+	}
+
+	.comic-fallback,
+	.lightbox-art {
+		position: relative;
+		display: block;
+		width: 100%;
+		aspect-ratio: 16 / 9;
+		overflow: hidden;
+		background: #efe7d6;
+	}
+
+	.fallback-0 { background: linear-gradient(160deg, #f8eddb, #d9e8df 55%, #233f69 140%); }
+	.fallback-1 { background: linear-gradient(160deg, #f6ead7, #ead0bb 55%, #2f655b 140%); }
+	.fallback-2 { background: linear-gradient(160deg, #f8efd7, #d6dfeb 52%, #9f4135 135%); }
+	.fallback-3 { background: linear-gradient(160deg, #f7efdf, #d7e2d3 55%, #b7893b 130%); }
+	.fallback-4 { background: linear-gradient(160deg, #f5eadf, #ddd8ec 55%, #17443d 135%); }
+
+	.ink-sun {
+		position: absolute;
+		top: 12%;
+		right: 15%;
+		width: 72px;
+		height: 72px;
+		border: 2px solid rgba(159, 65, 53, 0.34);
+		border-radius: 50%;
+		background: rgba(255, 250, 240, 0.42);
+	}
+
+	.ink-mountain {
+		position: absolute;
+		left: -8%;
+		bottom: 18%;
+		width: 70%;
+		height: 38%;
+		border-radius: 60% 40% 0 0;
+		background: rgba(21, 36, 43, 0.18);
+		transform: rotate(-7deg);
+
+		&.two {
+			left: 34%;
+			bottom: 20%;
+			width: 76%;
+			height: 44%;
+			background: rgba(21, 36, 43, 0.12);
+			transform: rotate(8deg);
+		}
+	}
+
+	.ink-river {
+		position: absolute;
+		left: 10%;
+		bottom: 18%;
+		width: 78%;
+		height: 54px;
+		border-bottom: 3px solid rgba(47, 101, 91, 0.38);
+		border-radius: 50%;
+	}
+
+	.ink-figure {
+		position: absolute;
+		left: 48%;
+		bottom: 23%;
+		width: 10px;
+		height: 36px;
+		border-radius: 999px 999px 2px 2px;
+		background: rgba(21, 36, 43, 0.62);
+	}
+
+	.fallback-label {
+		position: absolute;
+		left: 14px;
+		right: 14px;
+		bottom: 14px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 10px;
+		min-height: 38px;
+		padding: 8px 10px;
+		border: 1px solid rgba(21, 36, 43, 0.12);
+		border-radius: 8px;
+		background: rgba(255, 250, 240, 0.78);
+		color: var(--ink-soft);
+		font-family: PingFang SC, sans-serif;
+		font-size: 12px;
+
+		strong {
+			color: var(--ink);
+			white-space: nowrap;
+		}
+	}
+
+	.dialogue {
+		display: grid;
+		grid-template-rows: minmax(0, auto) minmax(0, 1fr);
+		align-content: center;
+		justify-items: center;
+		gap: 12px;
+		padding: 18px;
+		min-height: 0;
+		overflow: hidden;
+		text-align: center;
+	}
+
+	.original {
+		margin: 0;
+		color: #0f1c22;
+		font-size: 23px;
+		font-weight: 700;
+		line-height: 1.65;
+		text-align: center;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	.plain {
+		margin: 0;
+		max-width: 42em;
+		color: #2d3b42;
+		font-family: PingFang SC, sans-serif;
+		font-size: 16px;
+		line-height: 1.75;
+		text-align: center;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	.sutra-footer {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-wrap: wrap;
+		gap: 12px;
+		min-height: 70px;
+		padding: 18px 24px 28px;
+		color: var(--ink-soft);
+		font-family: PingFang SC, sans-serif;
+		font-size: 13px;
+	}
+
+	.lightbox-backdrop {
+		position: fixed;
+		inset: 0;
+		z-index: 80;
+		display: grid;
+		place-items: center;
+		padding: 18px;
+		background: rgba(10, 14, 16, 0.76);
+		backdrop-filter: blur(18px);
+
+		&[hidden] {
+			display: none;
+		}
+	}
+
+	.lightbox-panel {
+		display: grid;
+		grid-template-rows: 56px minmax(0, 1fr) minmax(168px, auto);
+		width: min(1380px, calc(100vw - 24px));
+		height: calc(100dvh - 36px);
+		overflow: hidden;
+		border: 1px solid rgba(255, 250, 240, 0.22);
+		border-radius: 8px;
+		background: #10181b;
+		color: #fffaf0;
+		box-shadow: 0 28px 90px rgba(0, 0, 0, 0.46);
+	}
+
+	.lightbox-top {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+		min-height: 56px;
+		padding: 8px 12px 8px 18px;
+		border-bottom: 1px solid rgba(255, 250, 240, 0.13);
+		color: rgba(255, 250, 240, 0.74);
+		font-family: PingFang SC, sans-serif;
+		font-size: 14px;
+	}
+
+	.lightbox-close {
+		background: rgba(255, 250, 240, 0.08);
+		border-color: rgba(255, 250, 240, 0.18);
+		color: #fffaf0;
+	}
+
+	.lightbox-stage {
+		position: relative;
+		display: grid;
+		place-items: center;
+		min-height: 0;
+		overflow: hidden;
+		padding: 10px 58px;
+		background: radial-gradient(circle at 26% 12%, rgba(183, 137, 59, 0.16), transparent 28%), linear-gradient(180deg, #111b1d, #0d1316);
+	}
+
+	.lightbox-art {
+		width: min(100%, calc((100dvh - 286px) * 16 / 9));
+		max-width: 100%;
+		max-height: calc(100dvh - 286px);
+		border: 1px solid rgba(255, 250, 240, 0.14);
+		border-radius: 8px;
+		box-shadow: 0 18px 58px rgba(0, 0, 0, 0.34);
+
+		&.has-image {
+			background-color: #0d1316;
+			background-position: center;
+			background-repeat: no-repeat;
+			background-size: contain;
+		}
+
+		&.has-image span {
+			display: none;
+		}
+	}
+
+	.lightbox-nav {
+		position: absolute;
+		top: 50%;
+		z-index: 1;
+		display: grid;
+		place-items: center;
+		width: 48px;
+		height: 72px;
+		border: 1px solid rgba(255, 250, 240, 0.18);
+		border-radius: 8px;
+		background: rgba(255, 250, 240, 0.08);
+		color: #fffaf0;
+		cursor: pointer;
+		transform: translateY(-50%);
+
+		&.previous {
+			left: 18px;
+		}
+
+		&.next {
+			right: 18px;
+		}
+	}
+
+	.lightbox-text {
+		display: grid;
+		gap: 10px;
+		align-content: start;
+		justify-items: center;
+		min-height: 128px;
+		max-height: 220px;
+		overflow: auto;
+		padding: 16px 24px 20px;
+		border-top: 1px solid rgba(255, 250, 240, 0.13);
+		background: rgba(255, 250, 240, 0.05);
+		text-align: center;
+
+		details {
+			width: min(960px, 100%);
+			color: rgba(255, 250, 240, 0.68);
+			font-family: PingFang SC, sans-serif;
+			font-size: 13px;
+			line-height: 1.6;
+			text-align: left;
+		}
+	}
+
+	.lightbox-original {
+		margin: 0;
+		max-width: 960px;
+		color: #fffaf0;
+		font-size: 23px;
+		font-weight: 700;
+		line-height: 1.6;
+		text-align: center;
+	}
+
+	.lightbox-plain {
+		margin: 0;
+		max-width: 960px;
+		color: rgba(255, 250, 240, 0.82);
+		font-family: PingFang SC, sans-serif;
+		font-size: 17px;
+		line-height: 1.75;
+		text-align: center;
+	}
+
+	@keyframes sutraSoundWash {
+		0%,
+		100% {
+			background-position: 0% 50%, 0% 50%;
+			filter: saturate(1);
+		}
+
+		50% {
+			background-position: 100% 50%, 100% 50%;
+			filter: saturate(1.08);
+		}
+	}
+
+	@keyframes sutraPulse {
+		0%,
+		100% {
+			box-shadow: inset 0 0 0 1px rgba(159, 65, 53, 0.25), 0 0 0 0 rgba(183, 137, 59, 0);
+			transform: scale(1);
+		}
+
+		50% {
+			box-shadow: inset 0 0 0 1px rgba(159, 65, 53, 0.25), 0 0 0 7px rgba(183, 137, 59, 0.13);
+			transform: scale(1.04);
+		}
+	}
+
+	@keyframes sutraBars {
+		0%,
+		100% {
+			transform: scaleY(0.62);
+		}
+
+		50% {
+			transform: scaleY(1.18);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		:global(body.sutra-audio-playing) .sutra-topbar::before,
+		:global(body.sutra-audio-playing) .audio-orb,
+		:global(body.sutra-audio-playing) .audio-orb span {
+			animation: none;
+		}
+	}
+
+	@media (max-width: 1080px) {
+		.sutra-mantra {
+			display: none;
+		}
+
+		.reader-shell {
+			grid-template-columns: 1fr;
+			gap: 16px;
+			padding: 16px;
+		}
+
+		.chapter-rail {
+			display: none;
+		}
+
+		.chapter-title-row h1 {
+			font-size: 38px;
+		}
+	}
+
+	@media (max-width: 760px) {
+		.sutra-topbar {
+			position: static;
+			align-items: flex-start;
+			padding: 12px 14px;
+		}
+
+		.sutra-brand strong {
+			font-size: 22px;
+		}
+
+		.brand-eyebrow {
+			font-size: 10px;
+		}
+
+		.brand-mark {
+			width: 48px;
+			height: 48px;
+		}
+
+		.brand-glyph {
+			font-size: 28px;
+		}
+
+		.reader-actions {
+			gap: 6px;
+		}
+
+		.audio-toggle {
+			min-width: 108px;
+			height: 40px;
+			padding-right: 10px;
+		}
+
+		.chapter-header {
+			padding: 20px;
+		}
+
+		.chapter-title-row {
+			grid-template-columns: 1fr;
+			align-items: start;
+
+			h1 {
+				font-size: 34px;
+			}
+		}
+
+		.chapter-stepper {
+			width: 100%;
+
+			select {
+				flex: 1;
+				width: auto;
+				max-width: none;
+			}
+		}
+
+		.chapter-text {
+			font-size: 19px;
+		}
+
+		.manga-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.manga-card {
+			grid-template-rows: 44px auto auto;
+		}
+
+		.dialogue {
+			min-height: 160px;
+		}
+
+		.original {
+			font-size: 21px;
+			-webkit-line-clamp: 3;
+		}
+
+		.plain {
+			-webkit-line-clamp: 3;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.sutra-topbar {
+			flex-direction: column;
+		}
+
+		.reader-actions {
+			width: 100%;
+			justify-content: flex-start;
+		}
+
+		.audio-copy em {
+			display: none;
+		}
+
+		.audio-toggle {
+			min-width: 82px;
+		}
+
+		.reader-shell {
+			padding: 12px;
+		}
+
+		.chapter-header {
+			padding: 16px;
+		}
+
+		.chapter-title-row h1 {
+			font-size: 30px;
+		}
+
+		.fallback-label {
+			align-items: flex-start;
+			flex-direction: column;
+		}
+	}
+</style>

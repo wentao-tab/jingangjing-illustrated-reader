@@ -1,0 +1,21 @@
+---
+import { withBase } from '../utils/paths';
+
+interface Props {
+	title?: string;
+	description?: string;
+	keywords?: string;
+	favicon?: string;
+}
+
+const { title, description, keywords, favicon = withBase('/favicon.png') } = Astro.props;
+---
+
+<meta charset="UTF-8" />
+<meta name="description" property="og:description" content={description} />
+<meta name="keywords" content={keywords} />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="generator" content={Astro.generator} />
+<title>{title}</title>
+<link rel="icon" type="image/png" href={favicon} />
+<link rel="apple-touch-icon" href={favicon} />

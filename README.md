@@ -4,7 +4,7 @@
 >
 > An illustrated reader of the Diamond Sutra: selected core lines from each chapter, plain-language interpretation, audio reading, and 16:9 ink-style illustrations.
 
-[在线阅读](https://wentao-tab.github.io/jingangjing-illustrated-reader/) · [个人站版本](https://liwentao.com/jingangjing/) · [License](./LICENSE)
+[在线阅读](https://wentao-tab.github.io/jingangjing-illustrated-reader/) · [License](./LICENSE)
 
 **中文** | [English](#english)
 
@@ -26,7 +26,7 @@
 - 支持章节目录、上一品/下一品、下拉选择品目。
 - 支持图文卡片阅读和 lightbox 灯箱查看。
 - 支持诵读音频播放、暂停和头部微动效反馈。
-- 已拆成独立开源仓库，同时保留个人站版本。
+- 已拆成独立开源仓库，并支持 GitHub Pages 在线预览。
 
 ## 技术栈
 

@@ -1,0 +1,1317 @@
+---
+import MainHead from "../components/MainHead.astro";
+import { withBase } from "../utils/paths";
+
+const sampleQuestions = [
+	"如何理解「应作如是观」？",
+	"遇到执念时怎么安住其心？",
+	"因果和放下矛盾吗？",
+];
+---
+
+<html lang="zh-CN">
+	<head>
+		<MainHead
+			title="应作如是 · 如是我问"
+			description="围绕佛法、人生与心念的问答页面。"
+			keywords="应作如是,如是我问,佛法问答,金刚经"
+			favicon={withBase("/assets/brand/favicon.png")}
+		/>
+		<link rel="preconnect" href="https://fontsapi.zeoseven.com" crossorigin />
+		<link rel="preconnect" href="https://registry.npmmirror.com" crossorigin />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link rel="preconnect" href="https://unpkg.com" crossorigin />
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500&display=swap" />
+		<link rel="stylesheet" href="https://registry.npmmirror.com/lxgw-wenkai-screen-web/1.521.0/files/lxgwwenkaiscreen/result.css" />
+		<link rel="stylesheet" href="https://unpkg.com/@chinese-fonts/hwmct@3.0.0/dist/%E6%B1%87%E6%96%87%E6%98%8E%E6%9C%9D%E4%BD%93/result.css" />
+	</head>
+	<body class="ask-body">
+		<div class="ask-page" data-chat-page>
+			<header class="ask-topbar" aria-label="主导航">
+				<a class="brand" href={withBase("/")} aria-label="应作如是首页">
+					<img class="brand-mark" src={withBase("/assets/brand/yingzuo-logo.png")} alt="" aria-hidden="true" loading="eager" />
+					<span class="brand-copy">
+						<strong>应作如是</strong>
+						<em>观心问答</em>
+					</span>
+				</a>
+
+				<nav class="nav-tabs" aria-label="模块导航">
+					<a href={withBase("/chat")} class="nav-item active" aria-current="page">
+						<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6.5A3.5 3.5 0 0 1 8.5 3h7A3.5 3.5 0 0 1 19 6.5v4a3.5 3.5 0 0 1-3.5 3.5H11l-5 4v-4.2A3.5 3.5 0 0 1 5 11.5Z" /></svg>
+						<span>如是我问</span>
+					</a>
+					<button class="nav-item" type="button">
+						<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
+						<span>随缘读经</span>
+					</button>
+				</nav>
+
+				<div class="toolbar" aria-label="页面工具">
+					<label class="search-box">
+						<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-4.35-4.35M10.8 18a7.2 7.2 0 1 1 0-14.4 7.2 7.2 0 0 1 0 14.4Z" /></svg>
+						<input type="search" placeholder="搜索经句或问题" />
+						<kbd>⌘ K</kbd>
+					</label>
+					<button class="icon-button" type="button" aria-label="日历">
+						<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3v4M17 3v4M4.5 9h15M6 5h12a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z" /></svg>
+					</button>
+					<button class="icon-button" type="button" aria-label="切换明暗">
+						<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v2.2M12 18.8V21M4.2 4.2l1.6 1.6M18.2 18.2l1.6 1.6M3 12h2.2M18.8 12H21M4.2 19.8l1.6-1.6M18.2 5.8l1.6-1.6M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" /></svg>
+					</button>
+					<button class="profile-button" type="button" aria-label="个人中心">
+						<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM4.5 20a7.5 7.5 0 0 1 15 0" /></svg>
+					</button>
+				</div>
+			</header>
+
+			<main class="chat-shell">
+				<section class="hero" aria-labelledby="page-title">
+					<h1 id="page-title">应作如是</h1>
+					<p class="subhead">收录 <span class="subhead-number">30</span> 部佛经与古文典籍，你所问的关于佛法、人生、心念的一切，皆有经典可依的回答</p>
+				</section>
+
+				<section class="conversation" aria-label="问答示例" data-conversation>
+					<div class="prompt-row">
+						<button class="prompt-card" type="button" data-question={sampleQuestions[0]} data-current-question>
+							<span data-current-question-text>{sampleQuestions[0]}</span>
+						</button>
+						<span class="question-badge" aria-hidden="true">问</span>
+					</div>
+
+					<article class="answer-row">
+						<div class="answer-avatar" aria-hidden="true">
+							<span>观</span>
+						</div>
+						<div class="answer-card" data-answer-card>
+							<p>「应作如是观」不是让人冷漠地否定世界，而是提醒我们：眼前的一切都在因缘中生起，也会在因缘中变化。</p>
+							<p>所以面对顺境，不必把它抓成永恒；面对困境，也不用把它认成终局。能看见事物的流动性，心就少一点被外相牵走。</p>
+							<p>放到日常里，就是认真做该做的事，但不让结果占据全部的心。看见、承受、行动，然后给变化留下空间。</p>
+						</div>
+					</article>
+
+					<div class="answer-actions" aria-label="回答操作">
+						<button type="button" aria-label="复制">
+							<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 8h10v10H8zM6 16H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></svg>
+						</button>
+						<button type="button" aria-label="分享">
+							<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M5 14v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4" /></svg>
+						</button>
+						<button type="button" aria-label="赞同">
+							<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 11v9M7 11H4v9h3M7 11l4-7a2 2 0 0 1 3 1.8V9h4a2 2 0 0 1 1.9 2.5l-1.4 6A2 2 0 0 1 16.6 19H7" /></svg>
+						</button>
+						<button type="button" aria-label="不赞同">
+							<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 13V4M7 13H4V4h3M7 13l4 7a2 2 0 0 0 3-1.8V15h4a2 2 0 0 0 1.9-2.5l-1.4-6A2 2 0 0 0 16.6 5H7" /></svg>
+						</button>
+					</div>
+				</section>
+
+				<section class="composer-panel" aria-label="提问输入">
+					<div class="quick-questions" aria-label="推荐问题">
+						{sampleQuestions.map((question) => (
+							<button type="button" data-question={question}>{question}</button>
+						))}
+					</div>
+
+					<form class="composer" data-composer>
+						<div class="composer-tools" aria-label="输入工具">
+							<button type="button" aria-label="历史问题">
+								<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5M12 7v5l3 2" /></svg>
+							</button>
+							<button type="button" aria-label="新问题">
+								<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
+							</button>
+							<button type="button" aria-label="导入文本">
+								<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14" /></svg>
+							</button>
+						</div>
+						<label class="composer-input">
+							<textarea name="question" rows="3" placeholder="提出您的问题..." data-question-input></textarea>
+						</label>
+						<button class="send-button" type="submit" aria-label="发送问题">
+							<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H7M12 7l-5 5 5 5" /></svg>
+						</button>
+					</form>
+					<p class="disclaimer">回答基于知识库生成，仅供参考。复杂问题请咨询专业人士。</p>
+				</section>
+			</main>
+		</div>
+
+		<script>
+			import { answerFromKnowledge } from "../lib/knowledge";
+
+			const page = document.querySelector("[data-chat-page]");
+			const input = page?.querySelector("[data-question-input]");
+			const initialAnswerCard = page?.querySelector("[data-answer-card]");
+			const conversation = page?.querySelector("[data-conversation]");
+			const composer = page?.querySelector("[data-composer]");
+			const questionButtons = page?.querySelectorAll("[data-question]");
+			const sendButton = page?.querySelector(".send-button");
+			const currentQuestion = page?.querySelector("[data-current-question]");
+			const currentQuestionText = page?.querySelector("[data-current-question-text]");
+			let activeAnswerCard = initialAnswerCard;
+			const storageKey = "yingzuo-chat-session";
+
+			type Citation = {
+				scriptureTitle: string;
+				position: number;
+				originalText: string;
+			};
+
+			type ChatResult = {
+				answer?: string;
+				quote?: {
+					source: string;
+					text: string;
+					translation?: string;
+				};
+				interpretation?: string;
+				citations?: Citation[];
+			};
+
+			type StoredTurn = {
+				question: string;
+				result: ChatResult;
+			};
+
+			let conversationHistory: StoredTurn[] = [];
+
+			function appendParagraph(container: Element, text: string) {
+				const paragraph = document.createElement("p");
+				paragraph.textContent = text;
+				container.append(paragraph);
+			}
+
+			function renderAnswer(answer: string, citations: Citation[] = [], target = activeAnswerCard) {
+				if (!target) return;
+				target.innerHTML = "";
+
+				String(answer)
+					.split(/\n{2,}/)
+					.filter(Boolean)
+					.forEach((line) => appendParagraph(target, line));
+
+				if (!citations.length) return;
+
+				const citationList = document.createElement("div");
+				citationList.className = "citation-list";
+				const title = document.createElement("strong");
+				title.textContent = "引用依据";
+				citationList.append(title);
+
+				citations.forEach((citation) => {
+					const item = document.createElement("div");
+					item.className = "citation-item";
+					const source = document.createElement("span");
+					source.textContent = `《${citation.scriptureTitle}》第 ${citation.position} 段`;
+					const quote = document.createElement("q");
+					quote.textContent = citation.originalText;
+					item.append(source, quote);
+					citationList.append(item);
+				});
+
+				target.append(citationList);
+			}
+
+			function renderKnowledgeResult(result: ChatResult, target = activeAnswerCard) {
+				if (!target) return;
+				target.innerHTML = "";
+
+				if (result.quote) {
+					const quoteBlock = document.createElement("figure");
+					quoteBlock.className = "answer-quote";
+					const quote = document.createElement("blockquote");
+					quote.textContent = result.quote.text;
+					const caption = document.createElement("figcaption");
+					caption.textContent = result.quote.source;
+					quoteBlock.append(quote, caption);
+
+					if (result.quote.translation) {
+						const translation = document.createElement("p");
+						translation.className = "quote-translation";
+						translation.textContent = result.quote.translation;
+						quoteBlock.append(translation);
+					}
+
+					target.append(quoteBlock);
+				}
+
+				const interpretation = document.createElement("section");
+				interpretation.className = "answer-interpretation";
+				const heading = document.createElement("h2");
+				heading.textContent = "解析";
+				interpretation.append(heading);
+
+				String(result.interpretation || result.answer || "")
+					.split(/\n{2,}/)
+					.filter(Boolean)
+					.forEach((line) => appendParagraph(interpretation, line));
+
+				target.append(interpretation);
+
+				const restCitations = (result.citations ?? []).slice(1);
+				if (restCitations.length) {
+					const citationList = document.createElement("div");
+					citationList.className = "citation-list compact";
+					const title = document.createElement("strong");
+					title.textContent = "相关依据";
+					citationList.append(title);
+
+					restCitations.forEach((citation) => {
+						const item = document.createElement("div");
+						item.className = "citation-item";
+						const source = document.createElement("span");
+						source.textContent = `《${citation.scriptureTitle}》第 ${citation.position} 段`;
+						const quote = document.createElement("q");
+						quote.textContent = citation.originalText;
+						item.append(source, quote);
+						citationList.append(item);
+					});
+
+					target.append(citationList);
+				}
+			}
+
+			function createConversationTurn(question: string) {
+				if (!conversation) return null;
+
+				const turn = document.createElement("div");
+				turn.className = "conversation-turn";
+
+				const promptRow = document.createElement("div");
+				promptRow.className = "prompt-row";
+				const promptCard = document.createElement("button");
+				promptCard.className = "prompt-card";
+				promptCard.type = "button";
+				promptCard.setAttribute("data-question", question);
+				const promptText = document.createElement("span");
+				promptText.textContent = question;
+				promptCard.append(promptText);
+				const badge = document.createElement("span");
+				badge.className = "question-badge";
+				badge.setAttribute("aria-hidden", "true");
+				badge.textContent = "问";
+				promptRow.append(promptCard, badge);
+
+				const answerRow = document.createElement("article");
+				answerRow.className = "answer-row";
+				const avatar = document.createElement("div");
+				avatar.className = "answer-avatar";
+				avatar.setAttribute("aria-hidden", "true");
+				const avatarText = document.createElement("span");
+				avatarText.textContent = "观";
+				avatar.append(avatarText);
+				const card = document.createElement("div");
+				card.className = "answer-card";
+				answerRow.append(avatar, card);
+
+				turn.append(promptRow, answerRow);
+				conversation.append(turn);
+				conversation.scrollTo({ top: conversation.scrollHeight, behavior: "smooth" });
+				return card;
+			}
+
+			function saveSession() {
+				try {
+					sessionStorage.setItem(storageKey, JSON.stringify(conversationHistory.slice(-20)));
+				} catch {
+					// Ignore private browsing or storage quota failures.
+				}
+			}
+
+			function restoreSession() {
+				if (!conversation) return;
+				try {
+					const raw = sessionStorage.getItem(storageKey);
+					if (!raw) return;
+					const saved = JSON.parse(raw);
+					if (!Array.isArray(saved) || !saved.length) return;
+					conversationHistory = saved.filter((item) => item?.question && item?.result).slice(-20);
+					if (!conversationHistory.length) return;
+					conversation.innerHTML = "";
+					conversationHistory.forEach((turn) => {
+						const card = createConversationTurn(turn.question);
+						renderKnowledgeResult(turn.result, card);
+					});
+				} catch {
+					conversationHistory = [];
+				}
+			}
+
+			function updateCurrentQuestion(question: string) {
+				if (currentQuestion instanceof HTMLButtonElement) {
+					currentQuestion.setAttribute("data-question", question);
+				}
+				if (currentQuestionText) {
+					currentQuestionText.textContent = question;
+				}
+			}
+
+			function wait(ms: number) {
+				return new Promise((resolve) => window.setTimeout(resolve, ms));
+			}
+
+			function flattenStoredTurn(turn: StoredTurn) {
+				const quote = turn.result?.quote?.text ?? "";
+				const answer = turn.result?.interpretation ?? turn.result?.answer ?? "";
+				return [turn.question, quote, answer].filter(Boolean).join(" ");
+			}
+
+			function submitQuestion() {
+				if (composer instanceof HTMLFormElement) {
+					composer.requestSubmit();
+				}
+			}
+
+			questionButtons?.forEach((button) => {
+				button.addEventListener("click", () => {
+					if (!(input instanceof HTMLTextAreaElement)) return;
+					input.value = button.getAttribute("data-question") ?? "";
+					input.focus();
+				});
+			});
+
+			input?.addEventListener("keydown", (event) => {
+				if (!(input instanceof HTMLTextAreaElement)) return;
+				if (!(event instanceof KeyboardEvent)) return;
+				if (event.key !== "Enter" || event.shiftKey || event.isComposing) return;
+				event.preventDefault();
+				submitQuestion();
+			});
+
+			restoreSession();
+
+			composer?.addEventListener("submit", async (event) => {
+				event.preventDefault();
+				if (!(input instanceof HTMLTextAreaElement)) return;
+				const question = input.value.trim();
+				if (!question) {
+					input.focus();
+					return;
+				}
+				updateCurrentQuestion(question);
+				const turnAnswerCard = createConversationTurn(question);
+				activeAnswerCard = turnAnswerCard;
+				turnAnswerCard?.setAttribute("aria-busy", "true");
+				renderAnswer(`正在从本地知识库检索：「${question}」`, [], turnAnswerCard);
+				if (sendButton instanceof HTMLButtonElement) sendButton.disabled = true;
+
+				try {
+					await wait(320);
+					const historyText = conversationHistory.slice(-6).map(flattenStoredTurn).filter(Boolean).join(" ");
+					const result = answerFromKnowledge(question, [historyText, question].filter(Boolean).join(" "));
+
+					renderKnowledgeResult(result, turnAnswerCard);
+					conversationHistory.push({ question, result });
+					saveSession();
+					input.value = "";
+				} catch {
+					renderAnswer("本地知识库暂时没有返回结果。请换一个更具体的问题再试。", [], turnAnswerCard);
+				} finally {
+					turnAnswerCard?.removeAttribute("aria-busy");
+					if (sendButton instanceof HTMLButtonElement) sendButton.disabled = false;
+				}
+			});
+		</script>
+	</body>
+</html>
+
+<style>
+	:root {
+		--ask-bg: #f8f7f2;
+		--ask-surface: #fffdf8;
+		--ask-panel: #f1f7f3;
+		--ask-ink: #24312d;
+		--ask-muted: #707b76;
+		--ask-line: rgba(36, 49, 45, 0.12);
+		--ask-primary: #a56505;
+		--ask-primary-dark: #7a4300;
+		--ask-accent: #a56505;
+		--ask-soft: #f5edde;
+		--ask-shadow: 0 22px 70px rgba(29, 44, 40, 0.11);
+		--ask-radius: 18px;
+		--ask-ming-font: "Huiwen-mincho", "KingHwaOldSong-MN", "Songti SC", "SimSun", "宋体", "STSong", serif;
+		--ask-kai-font: "LXGW WenKai Screen", "STKaiti", "Kaiti SC", "KaiTi", "楷体", sans-serif;
+		--ask-mono-font: "Space Grotesk", "SFMono-Regular", "Menlo", "Consolas", monospace;
+		--ask-title-font: var(--ask-ming-font);
+		--ask-antique-font: var(--ask-kai-font);
+		color-scheme: light;
+	}
+
+	* {
+		box-sizing: border-box;
+	}
+
+	body.ask-body {
+		margin: 0;
+		min-width: 320px;
+		background:
+			linear-gradient(180deg, rgba(255, 255, 255, 0.74), rgba(248, 247, 242, 0.9)),
+			radial-gradient(circle at 18% 18%, rgba(165, 101, 5, 0.08), transparent 30rem),
+			var(--ask-bg);
+		color: var(--ask-ink);
+		font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", Georgia, serif;
+	}
+
+	button,
+	input,
+	textarea {
+		font: inherit;
+	}
+
+	button,
+	a {
+		-webkit-tap-highlight-color: transparent;
+	}
+
+	svg {
+		width: 20px;
+		height: 20px;
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 1.8;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+	}
+
+	.ask-page {
+		height: 100vh;
+		overflow: hidden;
+		padding: 14px clamp(16px, 4vw, 56px) 14px;
+	}
+
+	.ask-topbar {
+		position: sticky;
+		top: 10px;
+		z-index: 10;
+		display: grid;
+		grid-template-columns: minmax(190px, 1fr) auto minmax(240px, 1fr);
+		align-items: center;
+		gap: 18px;
+		width: min(1640px, 100%);
+		margin: 0 auto;
+		padding: 10px 20px;
+		border: 1px solid rgba(36, 49, 45, 0.08);
+		border-radius: 16px;
+		background: rgba(255, 253, 248, 0.86);
+		box-shadow: 0 14px 46px rgba(29, 44, 40, 0.08);
+		backdrop-filter: blur(18px);
+	}
+
+	.brand {
+		display: inline-flex;
+		align-items: center;
+		gap: 14px;
+		min-width: 0;
+		color: var(--ask-ink);
+		text-decoration: none;
+	}
+
+	.brand-mark {
+		width: 44px;
+		height: 44px;
+		aspect-ratio: 1;
+		display: block;
+		border-radius: 14px;
+		object-fit: cover;
+		box-shadow: 0 8px 22px rgba(126, 70, 0, 0.18);
+	}
+
+	.brand-copy {
+		display: grid;
+		gap: 2px;
+	}
+
+	.brand-copy strong {
+		font-size: clamp(18px, 1.4vw, 24px);
+		font-weight: 400;
+		letter-spacing: 0.05em;
+		font-family: var(--ask-ming-font);
+	}
+
+	.brand-copy em {
+		color: var(--ask-muted);
+		font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+		font-size: 12px;
+		font-style: normal;
+	}
+
+	.nav-tabs,
+	.toolbar,
+	.answer-actions,
+	.composer-tools,
+	.quick-questions {
+		display: flex;
+		align-items: center;
+	}
+
+	.nav-tabs {
+		justify-content: center;
+		gap: 8px;
+	}
+
+	.nav-item {
+		display: inline-flex;
+		align-items: center;
+		gap: 9px;
+		min-height: 40px;
+		padding: 0 16px;
+		border: 1px solid transparent;
+		border-radius: 999px;
+		background: transparent;
+		color: var(--ask-muted);
+		text-decoration: none;
+		cursor: pointer;
+		white-space: nowrap;
+		font-family: var(--ask-antique-font);
+		font-size: 16px;
+	}
+
+	.nav-item.active {
+		border-color: rgba(15, 118, 110, 0.18);
+		background: var(--ask-soft);
+		color: var(--ask-primary-dark);
+		font-weight: 700;
+		box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.58);
+	}
+
+	.toolbar {
+		justify-content: flex-end;
+		gap: 10px;
+	}
+
+	.search-box {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		width: min(260px, 100%);
+		min-height: 40px;
+		padding: 0 13px;
+		border: 1px solid var(--ask-line);
+		border-radius: 999px;
+		background: #fff;
+		box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.7);
+	}
+
+	.search-box input {
+		width: 100%;
+		border: 0;
+		outline: 0;
+		background: transparent;
+		color: var(--ask-ink);
+		font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+	}
+
+	.search-box kbd {
+		padding: 2px 7px;
+		border: 1px solid var(--ask-line);
+		border-radius: 999px;
+		color: var(--ask-muted);
+		font-family: ui-sans-serif, system-ui, sans-serif;
+		font-size: 12px;
+		white-space: nowrap;
+	}
+
+	.icon-button,
+	.profile-button,
+	.answer-actions button,
+	.composer-tools button,
+	.send-button {
+		display: inline-grid;
+		place-items: center;
+		border: 0;
+		background: transparent;
+		color: var(--ask-muted);
+		cursor: pointer;
+	}
+
+	.icon-button {
+		width: 36px;
+		aspect-ratio: 1;
+		border-radius: 50%;
+	}
+
+	.icon-button:hover {
+		background: rgba(15, 118, 110, 0.08);
+		color: var(--ask-primary-dark);
+	}
+
+	.profile-button {
+		width: 40px;
+		aspect-ratio: 1;
+		border-radius: 50%;
+		background: var(--ask-primary);
+		color: #fff;
+	}
+
+	.chat-shell {
+		display: grid;
+		grid-template-rows: auto minmax(0, 1fr) auto;
+		width: min(840px, 100%);
+		min-width: 0;
+		height: calc(100vh - 96px);
+		margin: 0 auto;
+		padding-top: 22px;
+	}
+
+	.hero,
+	.conversation,
+	.composer-panel {
+		width: 100%;
+		min-width: 0;
+	}
+
+	.hero {
+		padding: 0 0 28px;
+		text-align: center;
+	}
+
+	.hero h1 {
+		margin: 0;
+		color: var(--ask-primary-dark);
+		font-size: clamp(36px, 3.2vw, 50px);
+		font-weight: 400;
+		font-family: var(--ask-title-font);
+		letter-spacing: 0.06em;
+		line-height: 1;
+		text-wrap: balance;
+	}
+
+	.subhead {
+		max-width: min(960px, calc(100vw - 48px));
+		margin: 14px auto 0;
+		color: var(--ask-muted);
+		font-family: var(--ask-kai-font);
+		font-size: clamp(16px, 1.2vw, 20px);
+		font-weight: 400;
+		line-height: 1.55;
+		letter-spacing: 0.02em;
+		white-space: nowrap;
+	}
+
+	.subhead-number {
+		display: inline-block;
+		margin: 0 0.08em;
+		color: rgba(112, 123, 118, 0.86);
+		font-family: var(--ask-mono-font);
+		font-size: 0.96em;
+		font-weight: 400;
+		letter-spacing: 0.01em;
+		font-variant-numeric: tabular-nums;
+	}
+
+	.conversation {
+		display: grid;
+		gap: 16px;
+		align-content: start;
+		min-height: 0;
+		margin-top: 12px;
+		overflow-y: auto;
+		padding: 0 6px 18px;
+		scrollbar-gutter: stable;
+	}
+
+	.conversation-turn {
+		display: grid;
+		gap: 16px;
+	}
+
+	.conversation-turn + .conversation-turn {
+		padding-top: 14px;
+		border-top: 1px solid rgba(36, 49, 45, 0.08);
+	}
+
+	.prompt-row {
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+		gap: 12px;
+		margin-bottom: 10px;
+	}
+
+	.prompt-card {
+		max-width: min(340px, calc(100% - 56px));
+		min-height: 52px;
+		padding: 0 18px;
+		border: 1px solid rgba(15, 118, 110, 0.16);
+		border-radius: var(--ask-radius);
+		background: #fff5df;
+		color: var(--ask-ink);
+		box-shadow: 0 12px 38px rgba(29, 44, 40, 0.08);
+		cursor: pointer;
+		font-size: 15px;
+		line-height: 1.45;
+		text-align: left;
+	}
+
+	.question-badge,
+	.answer-avatar {
+		display: grid;
+		width: 36px;
+		aspect-ratio: 1;
+		place-items: center;
+		border-radius: 50%;
+		font-weight: 700;
+	}
+
+	.question-badge {
+		border: 1px solid rgba(181, 59, 45, 0.22);
+		background: #fff7ef;
+		color: var(--ask-accent);
+	}
+
+	.answer-row {
+		display: grid;
+		grid-template-columns: 42px minmax(0, 1fr);
+		gap: 10px;
+		align-items: start;
+		width: 100%;
+		min-width: 0;
+	}
+
+	.answer-avatar {
+		margin-top: 8px;
+		border: 1px solid rgba(15, 118, 110, 0.24);
+		background: #fff;
+		color: var(--ask-primary);
+		box-shadow: 0 8px 22px rgba(29, 44, 40, 0.08);
+	}
+
+	.answer-card {
+		min-width: 0;
+		padding: 14px 22px 18px;
+		border: 1px solid var(--ask-line);
+		border-radius: 12px;
+		background: rgba(255, 253, 248, 0.92);
+		box-shadow: 0 14px 42px rgba(29, 44, 40, 0.08);
+		font-size: 15px;
+		line-height: 1.78;
+		text-wrap: pretty;
+	}
+
+	.answer-card p {
+		margin: 0;
+	}
+
+	.answer-card p + p {
+		margin-top: 16px;
+	}
+
+	.answer-quote {
+		margin: 0 0 16px;
+		padding: 14px 16px;
+		border-left: 3px solid rgba(165, 101, 5, 0.72);
+		border-radius: 8px;
+		background: rgba(255, 245, 223, 0.62);
+		color: var(--ask-ink);
+	}
+
+	.answer-quote blockquote {
+		margin: 0;
+		font-family: var(--ask-ming-font);
+		font-size: 17px;
+		line-height: 1.65;
+		letter-spacing: 0.02em;
+	}
+
+	.answer-quote figcaption {
+		margin-top: 8px;
+		color: var(--ask-primary-dark);
+		font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+		font-size: 12px;
+	}
+
+	.quote-translation {
+		margin-top: 10px !important;
+		color: var(--ask-muted);
+		font-family: var(--ask-kai-font);
+		font-size: 14px;
+		line-height: 1.6;
+	}
+
+	.answer-interpretation {
+		display: grid;
+		gap: 8px;
+	}
+
+	.answer-interpretation h2 {
+		margin: 0;
+		color: var(--ask-primary-dark);
+		font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+		font-size: 13px;
+		font-weight: 700;
+		letter-spacing: 0.04em;
+	}
+
+	.answer-interpretation p + p {
+		margin-top: 4px;
+	}
+
+	.answer-card[aria-busy="true"] {
+		color: var(--ask-muted);
+	}
+
+	.citation-list {
+		display: grid;
+		gap: 8px;
+		margin-top: 18px;
+		padding-top: 14px;
+		border-top: 1px solid rgba(36, 49, 45, 0.1);
+		color: var(--ask-muted);
+		font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+		font-size: 12px;
+		line-height: 1.55;
+	}
+
+	.citation-list strong {
+		color: var(--ask-primary-dark);
+		font-weight: 600;
+	}
+
+	.citation-list.compact {
+		margin-top: 14px;
+		padding-top: 12px;
+	}
+
+	.citation-item {
+		display: grid;
+		gap: 3px;
+		padding: 8px 10px;
+		border: 1px solid rgba(36, 49, 45, 0.08);
+		border-radius: 8px;
+		background: rgba(255, 255, 255, 0.55);
+	}
+
+	.citation-item span {
+		color: var(--ask-primary-dark);
+	}
+
+	.citation-item q {
+		quotes: none;
+	}
+
+	.answer-actions {
+		gap: 16px;
+		padding-left: 52px;
+	}
+
+	.answer-actions button {
+		width: 28px;
+		aspect-ratio: 1;
+	}
+
+	.answer-actions button:hover {
+		color: var(--ask-primary-dark);
+	}
+
+	.composer-panel {
+		position: static;
+		padding: 8px 0 0;
+		background: transparent;
+	}
+
+	.quick-questions {
+		gap: 8px;
+		margin: 0 0 8px;
+		overflow-x: auto;
+		padding: 2px 2px;
+	}
+
+	.quick-questions button {
+		flex: 0 0 auto;
+		padding: 7px 12px;
+		border: 1px solid var(--ask-line);
+		border-radius: 999px;
+		background: rgba(255, 255, 255, 0.72);
+		color: var(--ask-muted);
+		cursor: pointer;
+		font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+		font-size: 12px;
+	}
+
+	.quick-questions button:hover {
+		border-color: rgba(15, 118, 110, 0.24);
+		color: var(--ask-primary-dark);
+	}
+
+	.composer {
+		position: relative;
+		display: block;
+		width: 100%;
+		min-width: 0;
+		padding: 10px 54px 30px 16px;
+		border: 1px solid var(--ask-line);
+		border-radius: 12px;
+		background: rgba(255, 253, 248, 0.94);
+		box-shadow: 0 12px 38px rgba(29, 44, 40, 0.08);
+	}
+
+	.composer::after {
+		content: "";
+		position: absolute;
+		right: 54px;
+		bottom: 30px;
+		left: 16px;
+		height: 1px;
+		background: rgba(36, 49, 45, 0.08);
+	}
+
+	.composer-tools {
+		position: absolute;
+		left: 14px;
+		bottom: 4px;
+		gap: 10px;
+	}
+
+	.composer-tools button {
+		width: 26px;
+		aspect-ratio: 1;
+	}
+
+	.composer-input {
+		min-width: 0;
+	}
+
+	.composer textarea {
+		display: block;
+		width: 100%;
+		min-height: 34px;
+		max-height: 76px;
+		resize: vertical;
+		border: 0;
+		outline: 0;
+		background: transparent;
+		color: var(--ask-ink);
+		font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+		font-size: 14px;
+		line-height: 1.55;
+	}
+
+	.send-button {
+		position: absolute;
+		right: 14px;
+		bottom: 5px;
+		width: 32px;
+		aspect-ratio: 1;
+		border-radius: 50%;
+		background: var(--ask-accent);
+		color: #fff;
+	}
+
+	.send-button svg {
+		transform: rotate(180deg);
+	}
+
+	.disclaimer {
+		margin: 6px 0 0;
+		color: var(--ask-muted);
+		font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+		font-size: 13px;
+		text-align: center;
+	}
+
+	@media (max-width: 1180px) {
+		.ask-topbar {
+			grid-template-columns: 1fr;
+			justify-items: center;
+		}
+
+		.toolbar {
+			width: 100%;
+			justify-content: center;
+		}
+	}
+
+	@media (max-width: 720px) {
+		.ask-page {
+			padding: 12px 12px 14px;
+		}
+
+		.ask-topbar {
+			top: 8px;
+			padding: 12px;
+			border-radius: 14px;
+		}
+
+		.brand {
+			width: 100%;
+		}
+
+		.nav-tabs {
+			width: 100%;
+			justify-content: flex-start;
+			overflow-x: auto;
+			padding-bottom: 2px;
+		}
+
+		.nav-item {
+			min-height: 40px;
+			padding: 0 13px;
+			font-size: 14px;
+		}
+
+		.toolbar {
+			display: grid;
+			grid-template-columns: 1fr auto auto auto;
+		}
+
+		.search-box {
+			min-width: 0;
+		}
+
+		.search-box kbd {
+			display: none;
+		}
+
+		.chat-shell {
+			height: calc(100vh - 206px);
+			min-height: 520px;
+			padding-top: 20px;
+		}
+
+		.hero {
+			padding-bottom: 28px;
+		}
+
+		.subhead {
+			max-width: 100%;
+			font-size: 17px;
+			line-height: 1.65;
+			white-space: normal;
+			text-wrap: balance;
+		}
+
+		.prompt-row {
+			align-items: flex-start;
+		}
+
+		.prompt-card {
+			max-width: calc(100% - 50px);
+			min-height: 60px;
+			padding: 0 18px;
+		}
+
+		.answer-row {
+			grid-template-columns: 1fr;
+		}
+
+		.answer-avatar {
+			display: none;
+		}
+
+		.answer-actions {
+			padding-left: 0;
+		}
+
+		.composer-panel {
+			position: static;
+			background: transparent;
+		}
+
+		.composer {
+			padding: 12px 56px 36px 16px;
+		}
+
+		.composer-tools {
+			left: 14px;
+			bottom: 7px;
+		}
+
+		.send-button {
+			right: 14px;
+			bottom: 8px;
+		}
+	}
+</style>
+
+<style is:global>
+	.conversation .conversation-turn {
+		display: grid;
+		gap: 16px;
+	}
+
+	.conversation .conversation-turn + .conversation-turn {
+		padding-top: 14px;
+		border-top: 1px solid rgba(36, 49, 45, 0.08);
+	}
+
+	.conversation .prompt-row {
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+		gap: 12px;
+		margin-bottom: 10px;
+	}
+
+	.conversation .prompt-card {
+		max-width: min(340px, calc(100% - 56px));
+		min-height: 52px;
+		padding: 0 18px;
+		border: 1px solid rgba(15, 118, 110, 0.16);
+		border-radius: var(--ask-radius);
+		background: #fff5df;
+		color: var(--ask-ink);
+		box-shadow: 0 12px 38px rgba(29, 44, 40, 0.08);
+		cursor: pointer;
+		font: inherit;
+		font-size: 15px;
+		line-height: 1.45;
+		text-align: left;
+	}
+
+	.conversation .question-badge,
+	.conversation .answer-avatar {
+		display: grid;
+		width: 36px;
+		aspect-ratio: 1;
+		place-items: center;
+		border-radius: 50%;
+		font-weight: 700;
+	}
+
+	.conversation .question-badge {
+		border: 1px solid rgba(181, 59, 45, 0.22);
+		background: #fff7ef;
+		color: var(--ask-accent);
+	}
+
+	.conversation .answer-row {
+		display: grid;
+		grid-template-columns: 42px minmax(0, 1fr);
+		gap: 10px;
+		align-items: start;
+		width: 100%;
+		min-width: 0;
+	}
+
+	.conversation .answer-avatar {
+		margin-top: 8px;
+		border: 1px solid rgba(15, 118, 110, 0.24);
+		background: #fff;
+		color: var(--ask-primary);
+		box-shadow: 0 8px 22px rgba(29, 44, 40, 0.08);
+	}
+
+	.conversation .answer-card {
+		min-width: 0;
+		padding: 14px 22px 18px;
+		border: 1px solid var(--ask-line);
+		border-radius: 12px;
+		background: rgba(255, 253, 248, 0.92);
+		box-shadow: 0 14px 42px rgba(29, 44, 40, 0.08);
+		color: var(--ask-ink);
+		font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", Georgia, serif;
+		font-size: 15px;
+		line-height: 1.78;
+		text-wrap: pretty;
+	}
+
+	.conversation .answer-card p {
+		margin: 0;
+	}
+
+	.conversation .answer-card p + p {
+		margin-top: 16px;
+	}
+
+	.conversation .answer-card[aria-busy="true"] {
+		color: var(--ask-muted);
+	}
+
+	.conversation .answer-quote {
+		margin: 0 0 16px;
+		padding: 14px 16px;
+		border-left: 3px solid rgba(165, 101, 5, 0.72);
+		border-radius: 8px;
+		background: rgba(255, 245, 223, 0.62);
+		color: var(--ask-ink);
+	}
+
+	.conversation .answer-quote blockquote {
+		margin: 0;
+		font-family: var(--ask-ming-font);
+		font-size: 17px;
+		line-height: 1.65;
+		letter-spacing: 0.02em;
+	}
+
+	.conversation .answer-quote figcaption {
+		margin-top: 8px;
+		color: var(--ask-primary-dark);
+		font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+		font-size: 12px;
+	}
+
+	.conversation .quote-translation {
+		margin-top: 10px !important;
+		color: var(--ask-muted);
+		font-family: var(--ask-kai-font);
+		font-size: 14px;
+		line-height: 1.6;
+	}
+
+	.conversation .answer-interpretation {
+		display: grid;
+		gap: 8px;
+	}
+
+	.conversation .answer-interpretation h2 {
+		margin: 0;
+		color: var(--ask-primary-dark);
+		font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+		font-size: 13px;
+		font-weight: 700;
+		letter-spacing: 0.04em;
+	}
+
+	.conversation .citation-list {
+		display: grid;
+		gap: 8px;
+		margin-top: 14px;
+		padding-top: 12px;
+		border-top: 1px solid rgba(36, 49, 45, 0.1);
+		color: var(--ask-muted);
+		font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+		font-size: 12px;
+		line-height: 1.55;
+	}
+
+	.conversation .citation-list strong,
+	.conversation .citation-item span {
+		color: var(--ask-primary-dark);
+	}
+
+	.conversation .citation-item {
+		display: grid;
+		gap: 3px;
+		padding: 8px 10px;
+		border: 1px solid rgba(36, 49, 45, 0.08);
+		border-radius: 8px;
+		background: rgba(255, 255, 255, 0.55);
+	}
+
+	.conversation .citation-item q {
+		quotes: none;
+	}
+
+	@media (max-width: 720px) {
+		.conversation .prompt-row {
+			align-items: flex-start;
+		}
+
+		.conversation .prompt-card {
+			max-width: calc(100% - 50px);
+			min-height: 60px;
+			padding: 0 18px;
+		}
+
+		.conversation .answer-row {
+			grid-template-columns: 1fr;
+		}
+
+		.conversation .answer-avatar {
+			display: none;
+		}
+	}
+</style>

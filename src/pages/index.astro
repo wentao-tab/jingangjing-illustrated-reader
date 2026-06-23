@@ -1,8 +1,8 @@
 ---
 import MainHead from "../components/MainHead.astro";
 import { withBase } from "../utils/paths";
+import diamondSutraData from "../data/diamond-sutra.json";
 
-const sourceUrl = "https://www.sutrasmantras.info/sutra01.html";
 const repoUrl = "https://github.com/wentao-tab/jingangjing-illustrated-reader";
 
 const chapterTitles = [
@@ -149,6 +149,56 @@ const chapters = chapterTitles.map((title, index) => {
 		],
 	};
 });
+
+const sourceRanges = [
+	[3, 4],
+	[5, 7],
+	[8, 8],
+	[9, 14],
+	[15, 17],
+	[18, 21],
+	[22, 23],
+	[24, 26],
+	[27, 34],
+	[35, 41],
+	[42, 46],
+	[47, 47],
+	[48, 56],
+	[57, 62],
+	[63, 65],
+	[66, 68],
+	[69, 77],
+	[78, 92],
+	[93, 95],
+	[96, 99],
+	[100, 102],
+	[103, 104],
+	[105, 105],
+	[106, 106],
+	[107, 107],
+	[108, 113],
+	[114, 115],
+	[116, 118],
+	[119, 119],
+	[120, 122],
+	[123, 125],
+	[126, 128],
+];
+
+const sourceParagraphs = diamondSutraData.paragraphs;
+const sourceChapters = chapters.map((chapter, index) => {
+	const [start, end] = sourceRanges[index];
+	const paragraphs = sourceParagraphs.filter((item) => item.position >= start && item.position <= end);
+	return {
+		...chapter,
+		sourceStart: start,
+		sourceEnd: end,
+		sourceParagraphs: paragraphs.map((item) => ({
+			...item,
+			translation: item.translations?.find((translation) => translation.language === "zh-CN")?.translatedText ?? "",
+		})),
+	};
+});
 ---
 
 <html lang="zh-CN">
@@ -190,7 +240,7 @@ const chapters = chapterTitles.map((title, index) => {
 						<em data-audio-state>点击播放</em>
 					</span>
 				</button>
-				<a class="reader-link" href={sourceUrl} target="_blank" rel="noreferrer">原文来源</a>
+				<button class="reader-link source-toggle" type="button" data-source-toggle aria-pressed="false">原文来源</button>
 				<a class="reader-link" href={repoUrl} target="_blank" rel="noreferrer">开源仓库</a>
 			</nav>
 			<audio data-sutra-audio preload="metadata">
@@ -211,7 +261,7 @@ const chapters = chapterTitles.map((title, index) => {
 				</div>
 			</aside>
 
-			<section class="reading-pane" aria-live="polite">
+			<section class="reading-pane" data-reader-view="cards" aria-live="polite">
 				{chapters.map((chapter) => (
 					<article class:list={["chapter-panel", chapter.chapter === 1 && "active"]} data-chapter-panel={chapter.chapter}>
 						<header class="chapter-header">
@@ -285,6 +335,46 @@ const chapters = chapterTitles.map((title, index) => {
 					</article>
 				))}
 			</section>
+
+			<section class="source-pane" data-reader-view="source" aria-live="polite" hidden>
+				{sourceChapters.map((chapter) => (
+					<article class:list={["source-panel", chapter.chapter === 1 && "active"]} data-source-panel={chapter.chapter}>
+						<header class="source-header">
+							<div>
+								<p class="source-eyebrow">原文对照 · 第 {String(chapter.chapter).padStart(2, "0")} 品</p>
+								<h1>{chapter.title}</h1>
+							</div>
+							<div class="chapter-stepper source-stepper">
+								<button class="step-button" type="button" data-move="-1" aria-label="上一品">‹</button>
+								<select aria-label="选择品目" data-chapter-select>
+									{chapters.map((item) => (
+										<option value={item.chapter} selected={item.chapter === chapter.chapter}>
+											{String(item.chapter).padStart(2, "0")} {item.title}
+										</option>
+									))}
+								</select>
+								<button class="step-button" type="button" data-move="1" aria-label="下一品">›</button>
+							</div>
+						</header>
+						<div class="source-list">
+							{chapter.sourceParagraphs.map((paragraph) => (
+								<article class="source-pair">
+									<div class="source-original-block">
+										<span>原文 · {String(paragraph.position).padStart(3, "0")}</span>
+										<p>{paragraph.originalText}</p>
+									</div>
+									{paragraph.translation && (
+										<div class="source-translation-block">
+											<span>白话翻译</span>
+											<p>{paragraph.translation}</p>
+										</div>
+									)}
+								</article>
+							))}
+						</div>
+					</article>
+				))}
+			</section>
 		</div>
 
 		<footer class="sutra-footer">
@@ -330,9 +420,13 @@ const chapters = chapterTitles.map((title, index) => {
 		title: button.querySelector("strong")?.textContent?.trim() ?? "",
 	}));
 	const chapters = [...document.querySelectorAll("[data-chapter-panel]")];
+	const sourcePanels = [...document.querySelectorAll("[data-source-panel]")];
 	const chapterButtons = [...document.querySelectorAll("[data-chapter-target]")];
 	const selects = [...document.querySelectorAll("[data-chapter-select]")];
 	const cardButtons = [...document.querySelectorAll("[data-open-card]")];
+	const sourceToggle = document.querySelector("[data-source-toggle]");
+	const cardView = document.querySelector('[data-reader-view="cards"]');
+	const sourceView = document.querySelector('[data-reader-view="source"]');
 	const lightbox = document.querySelector("[data-lightbox]");
 	const railTitle = document.querySelector("[data-rail-title]");
 	const sutraAudio = document.querySelector("[data-sutra-audio]");
@@ -340,16 +434,28 @@ const chapters = chapterTitles.map((title, index) => {
 	const audioState = document.querySelector("[data-audio-state]");
 	let activeChapter = 1;
 	let activeCard = 0;
+	let sourceMode = false;
 
 	function showChapter(next) {
 		const clamped = Math.max(1, Math.min(chapters.length, Number(next)));
 		activeChapter = clamped;
 		chapters.forEach((panel) => panel.classList.toggle("active", Number(panel.dataset.chapterPanel) === clamped));
+		sourcePanels.forEach((panel) => panel.classList.toggle("active", Number(panel.dataset.sourcePanel) === clamped));
 		chapterButtons.forEach((button) => button.classList.toggle("active", Number(button.dataset.chapterTarget) === clamped));
 		selects.forEach((select) => (select.value = String(clamped)));
 		const current = chapterMeta.find((item) => item.chapter === clamped);
 		if (railTitle && current) railTitle.textContent = `第 ${String(clamped).padStart(2, "0")} 品 · ${current.title}`;
 		window.scrollTo({ top: 0, behavior: "smooth" });
+	}
+
+	function setReaderMode(nextSourceMode) {
+		sourceMode = Boolean(nextSourceMode);
+		document.body.classList.toggle("sutra-source-mode", sourceMode);
+		sourceToggle?.setAttribute("aria-pressed", String(sourceMode));
+		if (sourceToggle) sourceToggle.textContent = sourceMode ? "配图阅读" : "原文来源";
+		if (cardView) cardView.hidden = sourceMode;
+		if (sourceView) sourceView.hidden = !sourceMode;
+		showChapter(activeChapter);
 	}
 
 	function setLightboxFromButton(button) {
@@ -389,6 +495,7 @@ const chapters = chapterTitles.map((title, index) => {
 
 	chapterButtons.forEach((button) => button.addEventListener("click", () => showChapter(button.dataset.chapterTarget)));
 	selects.forEach((select) => select.addEventListener("change", () => showChapter(select.value)));
+	sourceToggle?.addEventListener("click", () => setReaderMode(!sourceMode));
 	document.querySelectorAll("[data-move]").forEach((button) => {
 		button.addEventListener("click", () => showChapter(activeChapter + Number(button.dataset.move)));
 	});
@@ -797,6 +904,19 @@ const chapters = chapterTitles.map((title, index) => {
 		white-space: nowrap;
 	}
 
+	button.reader-link {
+		font-family: PingFang SC, sans-serif;
+		font-size: 14px;
+	}
+
+	.source-toggle[aria-pressed="true"] {
+		border-color: rgba(159, 65, 53, 0.5);
+		background:
+			linear-gradient(180deg, rgba(255, 250, 240, 0.98), rgba(239, 228, 205, 0.88)),
+			#fffaf0;
+		box-shadow: 0 0 0 3px rgba(159, 65, 53, 0.08), 0 9px 22px rgba(37, 31, 20, 0.09);
+	}
+
 	.reader-link:hover,
 	.step-button:hover {
 		transform: translateY(-1px);
@@ -896,6 +1016,18 @@ const chapters = chapterTitles.map((title, index) => {
 		}
 	}
 
+	.source-pane[hidden] {
+		display: none;
+	}
+
+	.source-panel {
+		display: none;
+
+		&.active {
+			display: block;
+		}
+	}
+
 	.chapter-header {
 		padding: 30px;
 		border: 1px solid var(--line);
@@ -961,6 +1093,94 @@ const chapters = chapterTitles.map((title, index) => {
 		color: #263840;
 		font-size: 22px;
 		line-height: 1.9;
+	}
+
+	.source-header {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+		align-items: center;
+		gap: 18px;
+		padding: 28px 30px;
+		border: 1px solid var(--line);
+		border-radius: 8px;
+		background:
+			linear-gradient(135deg, rgba(255, 250, 240, 0.96), rgba(245, 239, 225, 0.88)),
+			rgba(255, 250, 240, 0.9);
+		box-shadow: var(--shadow);
+
+		h1 {
+			margin: 5px 0 0;
+			font-size: 38px;
+			line-height: 1.15;
+			letter-spacing: 0;
+		}
+	}
+
+	.source-eyebrow {
+		margin: 0;
+		color: rgba(159, 65, 53, 0.78);
+		font-family: PingFang SC, sans-serif;
+		font-size: 13px;
+		font-weight: 700;
+		letter-spacing: 0;
+	}
+
+	.source-list {
+		display: grid;
+		gap: 22px;
+		margin-top: 22px;
+	}
+
+	.source-pair {
+		display: grid;
+		gap: 20px;
+		padding: 26px 28px 30px;
+		border: 1px solid rgba(21, 36, 43, 0.11);
+		border-radius: 8px;
+		background: rgba(255, 252, 245, 0.82);
+		box-shadow: 0 12px 34px rgba(21, 36, 43, 0.08);
+	}
+
+	.source-original-block,
+	.source-translation-block {
+		span {
+			display: block;
+			margin-bottom: 10px;
+			color: rgba(21, 36, 43, 0.48);
+			font-family: PingFang SC, sans-serif;
+			font-size: 12px;
+			font-weight: 700;
+		}
+
+		p {
+			margin: 0;
+			letter-spacing: 0;
+			white-space: pre-line;
+		}
+	}
+
+	.source-original-block {
+		padding: 20px 24px;
+		border-left: 3px solid rgba(183, 137, 59, 0.28);
+		border-radius: 0 8px 8px 0;
+		background: rgba(246, 241, 231, 0.86);
+
+		p {
+			color: rgba(21, 28, 32, 0.82);
+			font-size: 28px;
+			font-weight: 650;
+			line-height: 2;
+		}
+	}
+
+	.source-translation-block {
+		padding: 0 18px 0 27px;
+
+		p {
+			color: rgba(21, 28, 32, 0.82);
+			font-size: 24px;
+			line-height: 2.05;
+		}
 	}
 
 	.manga-grid {
@@ -1368,6 +1588,11 @@ const chapters = chapterTitles.map((title, index) => {
 		.chapter-title-row h1 {
 			font-size: 38px;
 		}
+
+		.source-header {
+			grid-template-columns: 1fr;
+			align-items: start;
+		}
 	}
 
 	@media (max-width: 760px) {
@@ -1429,6 +1654,46 @@ const chapters = chapterTitles.map((title, index) => {
 
 		.chapter-text {
 			font-size: 19px;
+		}
+
+		.source-header {
+			padding: 20px;
+
+			h1 {
+				font-size: 32px;
+			}
+		}
+
+		.source-stepper {
+			width: 100%;
+
+			select {
+				flex: 1;
+				width: auto;
+				max-width: none;
+			}
+		}
+
+		.source-pair {
+			padding: 18px;
+		}
+
+		.source-original-block {
+			padding: 16px 18px;
+
+			p {
+				font-size: 22px;
+				line-height: 1.9;
+			}
+		}
+
+		.source-translation-block {
+			padding: 0 4px 0 15px;
+
+			p {
+				font-size: 18px;
+				line-height: 1.95;
+			}
 		}
 
 		.manga-grid {

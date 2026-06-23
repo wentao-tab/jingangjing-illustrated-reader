@@ -1,0 +1,184 @@
+{
+  "version": "0.1.0",
+  "updatedAt": "2026-06-21",
+  "purpose": "应作如是问答知识库第一批经典清单",
+  "items": [
+    {
+      "id": "diamond-sutra",
+      "title": "金刚般若波罗蜜经",
+      "titleTraditional": "金剛般若波羅蜜經",
+      "kind": "sutra",
+      "priority": 1,
+      "dynasty": "后秦",
+      "translatorOrAuthor": "鸠摩罗什译",
+      "volumeCount": 1,
+      "topics": ["般若", "空性", "无住", "降伏其心", "如是观"],
+      "source": {
+        "preferred": "local",
+        "localPath": "src/data/diamond-sutra.json",
+        "referenceUrl": "https://rushiwowen.co/r/diamond-sutra"
+      },
+      "status": {
+        "catalog": "ready",
+        "content": "ready",
+        "segmentation": "pending",
+        "embedding": "pending",
+        "qaSeeds": "pending"
+      }
+    },
+    {
+      "id": "ksitigarbha-vows-sutra",
+      "title": "地藏菩萨本愿经",
+      "titleTraditional": "地藏菩薩本願經",
+      "kind": "sutra",
+      "priority": 2,
+      "dynasty": "唐",
+      "translatorOrAuthor": "实叉难陀译",
+      "volumeCount": 2,
+      "topics": ["地藏", "因果", "孝亲", "愿力", "业报"],
+      "source": {
+        "preferred": "to-be-confirmed",
+        "referenceUrl": "https://rushiwowen.co/r/cm981tkhy009wjo0v0ucs2pqv"
+      },
+      "status": {
+        "catalog": "ready",
+        "content": "pending",
+        "segmentation": "pending",
+        "embedding": "pending",
+        "qaSeeds": "pending"
+      }
+    },
+    {
+      "id": "lotus-sutra",
+      "title": "妙法莲华经",
+      "titleTraditional": "妙法蓮華經",
+      "kind": "sutra",
+      "priority": 3,
+      "dynasty": "姚秦",
+      "translatorOrAuthor": "鸠摩罗什译",
+      "volumeCount": 7,
+      "topics": ["一乘", "方便", "授记", "法华", "菩萨行"],
+      "source": {
+        "preferred": "to-be-confirmed",
+        "referenceUrl": "https://rushiwowen.co/r/cm9xd3vpc00esfs0wc5lzg3vz"
+      },
+      "status": {
+        "catalog": "ready",
+        "content": "pending",
+        "segmentation": "pending",
+        "embedding": "pending",
+        "qaSeeds": "pending"
+      }
+    },
+    {
+      "id": "mahayana-apratisthita-aloka-dharani-sutra",
+      "title": "大乘离文字普光明藏经",
+      "titleTraditional": "大乘離文字普光明藏經",
+      "kind": "sutra",
+      "priority": 4,
+      "dynasty": "唐",
+      "translatorOrAuthor": "地婆诃罗译",
+      "volumeCount": 1,
+      "topics": ["离文字", "光明藏", "不可说", "心性", "大乘"],
+      "source": {
+        "preferred": "to-be-confirmed",
+        "referenceUrl": "https://rushiwowen.co/r/mahayana-apratisthita-aloka-dharani-sutra"
+      },
+      "status": {
+        "catalog": "ready",
+        "content": "pending",
+        "segmentation": "pending",
+        "embedding": "pending",
+        "qaSeeds": "pending"
+      }
+    },
+    {
+      "id": "maha-parinirvana-sutra",
+      "title": "大般涅槃经",
+      "titleTraditional": "大般涅槃經",
+      "kind": "sutra",
+      "priority": 5,
+      "dynasty": "北凉",
+      "translatorOrAuthor": "昙无谶译",
+      "volumeCount": 40,
+      "topics": ["涅槃", "佛性", "常乐我净", "护法", "如来藏"],
+      "source": {
+        "preferred": "to-be-confirmed",
+        "referenceUrl": "https://rushiwowen.co/r/cm9w3iy3w023gjs0ve0t6xzan"
+      },
+      "status": {
+        "catalog": "ready",
+        "content": "pending",
+        "segmentation": "pending",
+        "embedding": "pending",
+        "qaSeeds": "pending"
+      }
+    },
+    {
+      "id": "avatamsaka-sutra-commentary",
+      "title": "大方广佛华严经疏",
+      "titleTraditional": "大方廣佛華嚴經疏",
+      "kind": "commentary",
+      "priority": 6,
+      "dynasty": "唐",
+      "translatorOrAuthor": "澄观述",
+      "volumeCount": null,
+      "topics": ["华严", "法界", "缘起", "菩萨行", "注疏"],
+      "source": {
+        "preferred": "to-be-confirmed",
+        "referenceUrl": "https://rushiwowen.co/r/cmcywa2ne03tslb04k4jd8xlb"
+      },
+      "status": {
+        "catalog": "ready",
+        "content": "pending",
+        "segmentation": "pending",
+        "embedding": "pending",
+        "qaSeeds": "pending"
+      }
+    },
+    {
+      "id": "mulamadhyamakakarika",
+      "title": "中论",
+      "titleTraditional": "中論",
+      "kind": "treatise",
+      "priority": 7,
+      "dynasty": "后秦",
+      "translatorOrAuthor": "龙树造，鸠摩罗什译",
+      "volumeCount": 4,
+      "topics": ["中观", "空性", "缘起", "八不", "破执"],
+      "source": {
+        "preferred": "to-be-confirmed",
+        "referenceUrl": "https://rushiwowen.co/r/cm983mbuj043ojo0vb19ia9tm"
+      },
+      "status": {
+        "catalog": "ready",
+        "content": "pending",
+        "segmentation": "pending",
+        "embedding": "pending",
+        "qaSeeds": "pending"
+      }
+    },
+    {
+      "id": "platform-sutra",
+      "title": "坛经",
+      "titleTraditional": "六祖大師法寶壇經",
+      "kind": "sutra",
+      "priority": 8,
+      "dynasty": "唐",
+      "translatorOrAuthor": "慧能述，尚荣译注本待清洗",
+      "volumeCount": 1,
+      "topics": ["禅宗", "见性", "无念", "顿悟", "般若", "定慧"],
+      "source": {
+        "preferred": "private-document",
+        "localRawSourceId": "tanjing-shangrong-annotated"
+      },
+      "status": {
+        "catalog": "ready",
+        "content": "private-source-ready",
+        "segmentation": "pending",
+        "embedding": "pending",
+        "qaSeeds": "pending"
+      }
+    }
+  ]
+}

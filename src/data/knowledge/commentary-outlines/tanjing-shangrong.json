@@ -1,0 +1,27 @@
+{
+  "sourceId": "tanjing-shangrong-annotated",
+  "targetScriptureId": "platform-sutra",
+  "title": "坛经",
+  "author": "慧能著，尚荣译注",
+  "updatedAt": "2026-06-21",
+  "sourceKind": "annotated-scripture-outline",
+  "introTopics": [
+    "坛经书名",
+    "坛经作者",
+    "坛经版本",
+    "禅宗地位",
+    "六祖革命"
+  ],
+  "chapters": [
+    { "number": 1, "title": "行由品", "topics": ["惠能身世", "闻经开悟", "五祖传法", "本来无一物"] },
+    { "number": 2, "title": "般若品", "topics": ["摩诃般若", "自性", "见性", "无念"] },
+    { "number": 3, "title": "疑问品", "topics": ["功德", "净土", "在家修行", "心净即佛土"] },
+    { "number": 4, "title": "定慧品", "topics": ["定慧一体", "一行三昧", "直心", "无住"] },
+    { "number": 5, "title": "坐禅品", "topics": ["坐禅", "不著心", "不著净", "内外不动"] },
+    { "number": 6, "title": "忏悔品", "topics": ["忏悔", "三身", "四弘誓愿", "无相戒"] },
+    { "number": 7, "title": "机缘品", "topics": ["弟子问答", "根机", "见性法门", "顿悟"] },
+    { "number": 8, "title": "顿渐品", "topics": ["顿悟渐修", "南北宗", "迷悟差别", "法无顿渐"] },
+    { "number": 9, "title": "护法品", "topics": ["护持正法", "王臣问法", "佛法与世间"] },
+    { "number": 10, "title": "付嘱品", "topics": ["传法", "三科法门", "三十六对", "临终付嘱"] }
+  ]
+}

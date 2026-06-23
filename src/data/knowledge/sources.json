@@ -1,0 +1,112 @@
+{
+  "version": "0.1.0",
+  "updatedAt": "2026-06-21",
+  "items": [
+    {
+      "id": "nan-huaijin-jingangjing-shuoshenme",
+      "title": "金刚经说什么",
+      "author": "南怀瑾",
+      "type": "commentary",
+      "targetScriptureId": "diamond-sutra",
+      "role": "interpretation-reference",
+      "storage": {
+        "rawText": ".local/knowledge/raw/nan-huaijin-jingangjing/full_text.txt",
+        "metadata": ".local/knowledge/raw/nan-huaijin-jingangjing/metadata.json",
+        "publicFrontendAsset": false
+      },
+      "extraction": {
+        "format": "epub",
+        "method": "ebooklib",
+        "mode": "text",
+        "spineItems": 3,
+        "estimatedTokens": 2941,
+        "hasToc": false,
+        "chaptersDetectedByExtractor": 0,
+        "manualHeadingScan": "available"
+      },
+      "status": {
+        "rawExtracted": "ready",
+        "outline": "pending",
+        "conceptIndex": "pending",
+        "qaUsage": "pending",
+        "embedding": "pending"
+      },
+      "policy": {
+        "useInPublicFrontend": "no",
+        "useForPrivateRetrieval": "yes",
+        "responseRule": "可作为解释参考，但回答中避免长段复制原书文字；优先转述观点，并和经典原文分层标注。"
+      }
+    },
+    {
+      "id": "tanjing-shangrong-annotated",
+      "title": "坛经",
+      "author": "慧能著，尚荣译注",
+      "type": "annotated-scripture",
+      "targetScriptureId": "platform-sutra",
+      "role": "scripture-and-annotation-source",
+      "storage": {
+        "rawText": ".local/knowledge/raw/tanjing-shangrong/full_text.txt",
+        "metadata": ".local/knowledge/raw/tanjing-shangrong/metadata.json",
+        "publicFrontendAsset": false
+      },
+      "extraction": {
+        "format": "epub",
+        "method": "ebooklib",
+        "mode": "text",
+        "spineItems": 13,
+        "estimatedTokens": 5046,
+        "hasToc": false,
+        "chaptersDetectedByExtractor": 0,
+        "manualHeadingScan": "available"
+      },
+      "status": {
+        "rawExtracted": "ready",
+        "outline": "ready",
+        "conceptIndex": "pending",
+        "qaUsage": "pending",
+        "embedding": "pending"
+      },
+      "policy": {
+        "useInPublicFrontend": "no",
+        "useForPrivateRetrieval": "yes",
+        "responseRule": "可作为《坛经》问答的解释参考；回答优先转述，不长段复制译注内容。"
+      }
+    },
+    {
+      "id": "fahua-laiyonghai-buddhist-thirteen",
+      "title": "佛教十三经：法华经",
+      "author": "赖永海",
+      "type": "commentary",
+      "targetScriptureId": "lotus-sutra",
+      "role": "interpretation-reference",
+      "storage": {
+        "rawText": ".local/knowledge/raw/fahua-laiyonghai/full_text.txt",
+        "metadata": ".local/knowledge/raw/fahua-laiyonghai/metadata.json",
+        "publicFrontendAsset": false
+      },
+      "extraction": {
+        "format": "pdf",
+        "method": "pdfminer",
+        "mode": "text",
+        "pages": 559,
+        "estimatedTokens": 0,
+        "hasToc": false,
+        "chaptersDetectedByExtractor": 0,
+        "manualHeadingScan": "unavailable",
+        "issue": "PDF 为 Pdg2Pic/FreePic2Pdf 图片版，普通文本提取结果为空，需 OCR 或替换为文本版来源。"
+      },
+      "status": {
+        "rawExtracted": "blocked",
+        "outline": "blocked",
+        "conceptIndex": "blocked",
+        "qaUsage": "blocked",
+        "embedding": "blocked"
+      },
+      "policy": {
+        "useInPublicFrontend": "no",
+        "useForPrivateRetrieval": "no-until-ocr",
+        "responseRule": "完成 OCR 或换成可复制文本源之前，不参与问答检索。"
+      }
+    }
+  ]
+}

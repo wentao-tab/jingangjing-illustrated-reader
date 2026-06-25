@@ -57,7 +57,7 @@ const sampleQuestions = [
 					<button class="icon-button" type="button" aria-label="日历">
 						<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3v4M17 3v4M4.5 9h15M6 5h12a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z" /></svg>
 					</button>
-					<button class="icon-button" type="button" aria-label="切换明暗">
+					<button class="icon-button theme-button" type="button" aria-label="切换明暗" aria-pressed="false" data-theme-toggle>
 						<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v2.2M12 18.8V21M4.2 4.2l1.6 1.6M18.2 18.2l1.6 1.6M3 12h2.2M18.8 12H21M4.2 19.8l1.6-1.6M18.2 5.8l1.6-1.6M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" /></svg>
 					</button>
 					<button class="profile-button" type="button" aria-label="个人中心">
@@ -150,8 +150,10 @@ const sampleQuestions = [
 			const sendButton = page?.querySelector(".send-button");
 			const currentQuestion = page?.querySelector("[data-current-question]");
 			const currentQuestionText = page?.querySelector("[data-current-question-text]");
+			const themeButton = page?.querySelector("[data-theme-toggle]");
 			let activeAnswerCard = initialAnswerCard;
 			const storageKey = "yingzuo-chat-session";
+			const themeStorageKey = "yingzuo-chat-theme";
 
 			type Citation = {
 				scriptureTitle: string;
@@ -380,6 +382,37 @@ const sampleQuestions = [
 				}
 			}
 
+			function applyTheme(theme: "light" | "dark") {
+				const isDark = theme === "dark";
+				document.body.classList.toggle("theme-dark", isDark);
+				if (themeButton instanceof HTMLButtonElement) {
+					themeButton.setAttribute("aria-pressed", String(isDark));
+					themeButton.setAttribute("aria-label", isDark ? "切换浅色" : "切换暗黑");
+				}
+			}
+
+			function getInitialTheme() {
+				try {
+					const saved = localStorage.getItem(themeStorageKey);
+					if (saved === "dark" || saved === "light") return saved;
+				} catch {
+					// Keep the default when storage is unavailable.
+				}
+				return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+			}
+
+			applyTheme(getInitialTheme());
+
+			themeButton?.addEventListener("click", () => {
+				const nextTheme = document.body.classList.contains("theme-dark") ? "light" : "dark";
+				applyTheme(nextTheme);
+				try {
+					localStorage.setItem(themeStorageKey, nextTheme);
+				} catch {
+					// Ignore storage failures.
+				}
+			});
+
 			questionButtons?.forEach((button) => {
 				button.addEventListener("click", () => {
 					if (!(input instanceof HTMLTextAreaElement)) return;
@@ -447,6 +480,18 @@ const sampleQuestions = [
 		--ask-primary-dark: #7a4300;
 		--ask-accent: #a56505;
 		--ask-soft: #f5edde;
+		--ask-body-wash: linear-gradient(180deg, rgba(255, 255, 255, 0.74), rgba(248, 247, 242, 0.9));
+		--ask-body-glow: radial-gradient(circle at 18% 18%, rgba(165, 101, 5, 0.08), transparent 30rem);
+		--ask-topbar-bg: rgba(255, 253, 248, 0.86);
+		--ask-card-bg: rgba(255, 253, 248, 0.92);
+		--ask-input-bg: #fff;
+		--ask-chip-bg: rgba(255, 255, 255, 0.72);
+		--ask-prompt-bg: #fff5df;
+		--ask-question-bg: #fff7ef;
+		--ask-quote-bg: rgba(255, 245, 223, 0.62);
+		--ask-citation-bg: rgba(255, 255, 255, 0.55);
+		--ask-hover-bg: rgba(15, 118, 110, 0.08);
+		--ask-invert-ink: #fff;
 		--ask-shadow: 0 22px 70px rgba(29, 44, 40, 0.11);
 		--ask-radius: 18px;
 		--ask-ming-font: "Huiwen-mincho", "KingHwaOldSong-MN", "Songti SC", "SimSun", "宋体", "STSong", serif;
@@ -457,6 +502,35 @@ const sampleQuestions = [
 		color-scheme: light;
 	}
 
+	body.ask-body.theme-dark {
+		--ask-bg: #050c13;
+		--ask-surface: #0a151c;
+		--ask-panel: #0e1f24;
+		--ask-ink: #faf8f5;
+		--ask-muted: rgba(250, 248, 245, 0.64);
+		--ask-line: rgba(250, 248, 245, 0.14);
+		--ask-primary: #d7a856;
+		--ask-primary-dark: #f3d99a;
+		--ask-accent: #d7a856;
+		--ask-soft: rgba(215, 168, 86, 0.12);
+		--ask-body-wash: linear-gradient(180deg, rgba(5, 12, 19, 0.86), rgba(5, 12, 19, 0.96));
+		--ask-body-glow:
+			radial-gradient(circle at 16% 12%, rgba(215, 168, 86, 0.14), transparent 28rem),
+			radial-gradient(circle at 86% 24%, rgba(111, 158, 143, 0.12), transparent 34rem);
+		--ask-topbar-bg: rgba(8, 18, 24, 0.78);
+		--ask-card-bg: rgba(8, 18, 24, 0.78);
+		--ask-input-bg: rgba(250, 248, 245, 0.06);
+		--ask-chip-bg: rgba(250, 248, 245, 0.07);
+		--ask-prompt-bg: rgba(215, 168, 86, 0.13);
+		--ask-question-bg: rgba(215, 168, 86, 0.08);
+		--ask-quote-bg: rgba(215, 168, 86, 0.11);
+		--ask-citation-bg: rgba(250, 248, 245, 0.05);
+		--ask-hover-bg: rgba(250, 248, 245, 0.08);
+		--ask-invert-ink: #050c13;
+		--ask-shadow: 0 26px 80px rgba(0, 0, 0, 0.38);
+		color-scheme: dark;
+	}
+
 	* {
 		box-sizing: border-box;
 	}
@@ -465,11 +539,12 @@ const sampleQuestions = [
 		margin: 0;
 		min-width: 320px;
 		background:
-			linear-gradient(180deg, rgba(255, 255, 255, 0.74), rgba(248, 247, 242, 0.9)),
-			radial-gradient(circle at 18% 18%, rgba(165, 101, 5, 0.08), transparent 30rem),
+			var(--ask-body-wash),
+			var(--ask-body-glow),
 			var(--ask-bg);
 		color: var(--ask-ink);
 		font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", Georgia, serif;
+		transition: background-color 0.28s ease, color 0.28s ease;
 	}
 
 	button,
@@ -510,11 +585,12 @@ const sampleQuestions = [
 		width: min(1640px, 100%);
 		margin: 0 auto;
 		padding: 10px 20px;
-		border: 1px solid rgba(36, 49, 45, 0.08);
+		border: 1px solid var(--ask-line);
 		border-radius: 16px;
-		background: rgba(255, 253, 248, 0.86);
-		box-shadow: 0 14px 46px rgba(29, 44, 40, 0.08);
+		background: var(--ask-topbar-bg);
+		box-shadow: var(--ask-shadow);
 		backdrop-filter: blur(18px);
+		transition: border-color 0.28s ease, background-color 0.28s ease, box-shadow 0.28s ease;
 	}
 
 	.brand {
@@ -587,11 +663,11 @@ const sampleQuestions = [
 	}
 
 	.nav-item.active {
-		border-color: rgba(15, 118, 110, 0.18);
+		border-color: var(--ask-line);
 		background: var(--ask-soft);
 		color: var(--ask-primary-dark);
 		font-weight: 700;
-		box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.58);
+		box-shadow: inset 0 0 0 1px rgba(250, 248, 245, 0.12);
 	}
 
 	.toolbar {
@@ -608,8 +684,8 @@ const sampleQuestions = [
 		padding: 0 13px;
 		border: 1px solid var(--ask-line);
 		border-radius: 999px;
-		background: #fff;
-		box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.7);
+		background: var(--ask-input-bg);
+		box-shadow: inset 0 0 0 1px rgba(250, 248, 245, 0.1);
 	}
 
 	.search-box input {
@@ -651,7 +727,12 @@ const sampleQuestions = [
 	}
 
 	.icon-button:hover {
-		background: rgba(15, 118, 110, 0.08);
+		background: var(--ask-hover-bg);
+		color: var(--ask-primary-dark);
+	}
+
+	.theme-button[aria-pressed="true"] {
+		background: var(--ask-soft);
 		color: var(--ask-primary-dark);
 	}
 
@@ -660,7 +741,7 @@ const sampleQuestions = [
 		aspect-ratio: 1;
 		border-radius: 50%;
 		background: var(--ask-primary);
-		color: #fff;
+		color: var(--ask-invert-ink);
 	}
 
 	.chat-shell {
@@ -711,7 +792,7 @@ const sampleQuestions = [
 	.subhead-number {
 		display: inline-block;
 		margin: 0 0.08em;
-		color: rgba(112, 123, 118, 0.86);
+		color: var(--ask-muted);
 		font-family: var(--ask-mono-font);
 		font-size: 0.96em;
 		font-weight: 400;
@@ -737,7 +818,7 @@ const sampleQuestions = [
 
 	.conversation-turn + .conversation-turn {
 		padding-top: 14px;
-		border-top: 1px solid rgba(36, 49, 45, 0.08);
+		border-top: 1px solid var(--ask-line);
 	}
 
 	.prompt-row {
@@ -752,11 +833,11 @@ const sampleQuestions = [
 		max-width: min(340px, calc(100% - 56px));
 		min-height: 52px;
 		padding: 0 18px;
-		border: 1px solid rgba(15, 118, 110, 0.16);
+		border: 1px solid var(--ask-line);
 		border-radius: var(--ask-radius);
-		background: #fff5df;
+		background: var(--ask-prompt-bg);
 		color: var(--ask-ink);
-		box-shadow: 0 12px 38px rgba(29, 44, 40, 0.08);
+		box-shadow: var(--ask-shadow);
 		cursor: pointer;
 		font-size: 15px;
 		line-height: 1.45;
@@ -774,8 +855,8 @@ const sampleQuestions = [
 	}
 
 	.question-badge {
-		border: 1px solid rgba(181, 59, 45, 0.22);
-		background: #fff7ef;
+		border: 1px solid var(--ask-line);
+		background: var(--ask-question-bg);
 		color: var(--ask-accent);
 	}
 
@@ -790,10 +871,10 @@ const sampleQuestions = [
 
 	.answer-avatar {
 		margin-top: 8px;
-		border: 1px solid rgba(15, 118, 110, 0.24);
-		background: #fff;
+		border: 1px solid var(--ask-line);
+		background: var(--ask-input-bg);
 		color: var(--ask-primary);
-		box-shadow: 0 8px 22px rgba(29, 44, 40, 0.08);
+		box-shadow: var(--ask-shadow);
 	}
 
 	.answer-card {
@@ -801,8 +882,8 @@ const sampleQuestions = [
 		padding: 14px 22px 18px;
 		border: 1px solid var(--ask-line);
 		border-radius: 12px;
-		background: rgba(255, 253, 248, 0.92);
-		box-shadow: 0 14px 42px rgba(29, 44, 40, 0.08);
+		background: var(--ask-card-bg);
+		box-shadow: var(--ask-shadow);
 		font-size: 15px;
 		line-height: 1.78;
 		text-wrap: pretty;
@@ -819,9 +900,9 @@ const sampleQuestions = [
 	.answer-quote {
 		margin: 0 0 16px;
 		padding: 14px 16px;
-		border-left: 3px solid rgba(165, 101, 5, 0.72);
+		border-left: 3px solid var(--ask-accent);
 		border-radius: 8px;
-		background: rgba(255, 245, 223, 0.62);
+		background: var(--ask-quote-bg);
 		color: var(--ask-ink);
 	}
 
@@ -875,7 +956,7 @@ const sampleQuestions = [
 		gap: 8px;
 		margin-top: 18px;
 		padding-top: 14px;
-		border-top: 1px solid rgba(36, 49, 45, 0.1);
+		border-top: 1px solid var(--ask-line);
 		color: var(--ask-muted);
 		font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 		font-size: 12px;
@@ -896,9 +977,9 @@ const sampleQuestions = [
 		display: grid;
 		gap: 3px;
 		padding: 8px 10px;
-		border: 1px solid rgba(36, 49, 45, 0.08);
+		border: 1px solid var(--ask-line);
 		border-radius: 8px;
-		background: rgba(255, 255, 255, 0.55);
+		background: var(--ask-citation-bg);
 	}
 
 	.citation-item span {
@@ -941,7 +1022,7 @@ const sampleQuestions = [
 		padding: 7px 12px;
 		border: 1px solid var(--ask-line);
 		border-radius: 999px;
-		background: rgba(255, 255, 255, 0.72);
+		background: var(--ask-chip-bg);
 		color: var(--ask-muted);
 		cursor: pointer;
 		font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -949,7 +1030,7 @@ const sampleQuestions = [
 	}
 
 	.quick-questions button:hover {
-		border-color: rgba(15, 118, 110, 0.24);
+		border-color: var(--ask-line);
 		color: var(--ask-primary-dark);
 	}
 
@@ -961,8 +1042,8 @@ const sampleQuestions = [
 		padding: 10px 54px 30px 16px;
 		border: 1px solid var(--ask-line);
 		border-radius: 12px;
-		background: rgba(255, 253, 248, 0.94);
-		box-shadow: 0 12px 38px rgba(29, 44, 40, 0.08);
+		background: var(--ask-card-bg);
+		box-shadow: var(--ask-shadow);
 	}
 
 	.composer::after {
@@ -972,7 +1053,7 @@ const sampleQuestions = [
 		bottom: 30px;
 		left: 16px;
 		height: 1px;
-		background: rgba(36, 49, 45, 0.08);
+		background: var(--ask-line);
 	}
 
 	.composer-tools {
@@ -1014,7 +1095,7 @@ const sampleQuestions = [
 		aspect-ratio: 1;
 		border-radius: 50%;
 		background: var(--ask-accent);
-		color: #fff;
+		color: var(--ask-invert-ink);
 	}
 
 	.send-button svg {
@@ -1151,7 +1232,7 @@ const sampleQuestions = [
 
 	.conversation .conversation-turn + .conversation-turn {
 		padding-top: 14px;
-		border-top: 1px solid rgba(36, 49, 45, 0.08);
+		border-top: 1px solid var(--ask-line);
 	}
 
 	.conversation .prompt-row {
@@ -1166,11 +1247,11 @@ const sampleQuestions = [
 		max-width: min(340px, calc(100% - 56px));
 		min-height: 52px;
 		padding: 0 18px;
-		border: 1px solid rgba(15, 118, 110, 0.16);
+		border: 1px solid var(--ask-line);
 		border-radius: var(--ask-radius);
-		background: #fff5df;
+		background: var(--ask-prompt-bg);
 		color: var(--ask-ink);
-		box-shadow: 0 12px 38px rgba(29, 44, 40, 0.08);
+		box-shadow: var(--ask-shadow);
 		cursor: pointer;
 		font: inherit;
 		font-size: 15px;
@@ -1189,8 +1270,8 @@ const sampleQuestions = [
 	}
 
 	.conversation .question-badge {
-		border: 1px solid rgba(181, 59, 45, 0.22);
-		background: #fff7ef;
+		border: 1px solid var(--ask-line);
+		background: var(--ask-question-bg);
 		color: var(--ask-accent);
 	}
 
@@ -1205,10 +1286,10 @@ const sampleQuestions = [
 
 	.conversation .answer-avatar {
 		margin-top: 8px;
-		border: 1px solid rgba(15, 118, 110, 0.24);
-		background: #fff;
+		border: 1px solid var(--ask-line);
+		background: var(--ask-input-bg);
 		color: var(--ask-primary);
-		box-shadow: 0 8px 22px rgba(29, 44, 40, 0.08);
+		box-shadow: var(--ask-shadow);
 	}
 
 	.conversation .answer-card {
@@ -1216,8 +1297,8 @@ const sampleQuestions = [
 		padding: 14px 22px 18px;
 		border: 1px solid var(--ask-line);
 		border-radius: 12px;
-		background: rgba(255, 253, 248, 0.92);
-		box-shadow: 0 14px 42px rgba(29, 44, 40, 0.08);
+		background: var(--ask-card-bg);
+		box-shadow: var(--ask-shadow);
 		color: var(--ask-ink);
 		font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", Georgia, serif;
 		font-size: 15px;
@@ -1240,9 +1321,9 @@ const sampleQuestions = [
 	.conversation .answer-quote {
 		margin: 0 0 16px;
 		padding: 14px 16px;
-		border-left: 3px solid rgba(165, 101, 5, 0.72);
+		border-left: 3px solid var(--ask-accent);
 		border-radius: 8px;
-		background: rgba(255, 245, 223, 0.62);
+		background: var(--ask-quote-bg);
 		color: var(--ask-ink);
 	}
 
@@ -1288,7 +1369,7 @@ const sampleQuestions = [
 		gap: 8px;
 		margin-top: 14px;
 		padding-top: 12px;
-		border-top: 1px solid rgba(36, 49, 45, 0.1);
+		border-top: 1px solid var(--ask-line);
 		color: var(--ask-muted);
 		font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 		font-size: 12px;
@@ -1304,9 +1385,9 @@ const sampleQuestions = [
 		display: grid;
 		gap: 3px;
 		padding: 8px 10px;
-		border: 1px solid rgba(36, 49, 45, 0.08);
+		border: 1px solid var(--ask-line);
 		border-radius: 8px;
-		background: rgba(255, 255, 255, 0.55);
+		background: var(--ask-citation-bg);
 	}
 
 	.conversation .citation-item q {

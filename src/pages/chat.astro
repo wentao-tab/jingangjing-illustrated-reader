@@ -183,14 +183,33 @@ const sampleQuestions = [
 				container.append(paragraph);
 			}
 
+			function isRemovedNotice(line: string) {
+				return line.includes("本地知识库") && line.includes("网页搜索") && line.includes("依据");
+			}
+
+			function answerLines(text: string) {
+				return String(text)
+					.split(/\n{2,}/)
+					.map((line) => line.trim())
+					.filter((line) => line && !isRemovedNotice(line));
+			}
+
+			function scrollAnswerToEnd(target = activeAnswerCard) {
+				if (!conversation || !target) return;
+				requestAnimationFrame(() => {
+					conversation.scrollTo({ top: conversation.scrollHeight, behavior: "smooth" });
+					const lastContent = target.lastElementChild;
+					if (lastContent instanceof HTMLElement) {
+						lastContent.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
+					}
+				});
+			}
+
 			function renderAnswer(answer: string, citations: Citation[] = [], target = activeAnswerCard) {
 				if (!target) return;
 				target.innerHTML = "";
 
-				String(answer)
-					.split(/\n{2,}/)
-					.filter(Boolean)
-					.forEach((line) => appendParagraph(target, line));
+				answerLines(answer).forEach((line) => appendParagraph(target, line));
 
 				if (!citations.length) return;
 
@@ -243,10 +262,7 @@ const sampleQuestions = [
 				heading.textContent = "解析";
 				interpretation.append(heading);
 
-				String(result.interpretation || result.answer || "")
-					.split(/\n{2,}/)
-					.filter(Boolean)
-					.forEach((line) => appendParagraph(interpretation, line));
+				answerLines(result.interpretation || result.answer || "").forEach((line) => appendParagraph(interpretation, line));
 
 				target.append(interpretation);
 
@@ -406,8 +422,10 @@ const sampleQuestions = [
 					conversationHistory.push({ question, result });
 					saveSession();
 					input.value = "";
+					scrollAnswerToEnd(turnAnswerCard);
 				} catch {
 					renderAnswer("本地知识库暂时没有返回结果。请换一个更具体的问题再试。", [], turnAnswerCard);
+					scrollAnswerToEnd(turnAnswerCard);
 				} finally {
 					turnAnswerCard?.removeAttribute("aria-busy");
 					if (sendButton instanceof HTMLButtonElement) sendButton.disabled = false;

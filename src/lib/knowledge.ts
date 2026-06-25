@@ -400,7 +400,6 @@ function buildInterpretation(question: string, citations: KnowledgeCitation[]) {
 		`你问的是「${question}」。我先从 ${sourceLine} 入手，而不是套一个固定答案。`,
 		getThemeGuidance(topics),
 		`落到当下，重点不是马上压掉情绪，也不是把道理讲赢，而是先分清：这件事真正需要处理的是什么，哪些只是心里追加出来的故事。${practicalQuestion}`,
-		"这个回答只调用本地知识库生成，没有调用网页搜索；下面的依据会列出实际命中的经典或提纲。",
 	].join("\n\n");
 }
 

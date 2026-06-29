@@ -265,6 +265,10 @@ const originSections = [
 
 			let conversationHistory: StoredTurn[] = [];
 
+			function setConversationMode(hasConversation: boolean) {
+				page?.classList.toggle("has-conversation", hasConversation);
+			}
+
 			function appendParagraph(container: Element, text: string) {
 				const paragraph = document.createElement("p");
 				paragraph.textContent = text;
@@ -438,8 +442,10 @@ const originSections = [
 						const card = createConversationTurn(turn.question);
 						renderKnowledgeResult(turn.result, card);
 					});
+					setConversationMode(true);
 				} catch {
 					conversationHistory = [];
+					setConversationMode(false);
 				}
 			}
 
@@ -608,6 +614,7 @@ const originSections = [
 					input.focus();
 					return;
 				}
+				setConversationMode(true);
 				updateCurrentQuestion(question);
 				const turnAnswerCard = createConversationTurn(question);
 				activeAnswerCard = turnAnswerCard;
@@ -1036,6 +1043,11 @@ const originSections = [
 		height: calc(100vh - 96px);
 		margin: 0 auto;
 		padding-top: 22px;
+		transition: padding-top 520ms cubic-bezier(0.22, 1, 0.36, 1);
+	}
+
+	.has-conversation .chat-shell {
+		padding-top: 0;
 	}
 
 	.origin-shell {
@@ -1159,8 +1171,24 @@ const originSections = [
 	}
 
 	.hero {
+		max-height: 132px;
 		padding: 0 0 28px;
+		overflow: hidden;
 		text-align: center;
+		transition:
+			max-height 560ms cubic-bezier(0.22, 1, 0.36, 1),
+			padding 560ms cubic-bezier(0.22, 1, 0.36, 1),
+			opacity 320ms ease,
+			transform 560ms cubic-bezier(0.22, 1, 0.36, 1);
+		will-change: max-height, opacity, transform;
+	}
+
+	.has-conversation .hero {
+		max-height: 0;
+		padding-bottom: 0;
+		opacity: 0;
+		pointer-events: none;
+		transform: translateY(-18px) scale(0.985);
 	}
 
 	.hero h1 {

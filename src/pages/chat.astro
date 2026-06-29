@@ -63,6 +63,22 @@ const originSections = [
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500&display=swap" />
 		<link rel="stylesheet" href="https://registry.npmmirror.com/lxgw-wenkai-screen-web/1.521.0/files/lxgwwenkaiscreen/result.css" />
 		<link rel="stylesheet" href="https://unpkg.com/@chinese-fonts/hwmct@3.0.0/dist/%E6%B1%87%E6%96%87%E6%98%8E%E6%9C%9D%E4%BD%93/result.css" />
+		<script is:inline>
+			(() => {
+				const key = "yingzuo-chat-theme";
+				let theme = "";
+				try {
+					const saved = localStorage.getItem(key);
+					if (saved === "dark" || saved === "light") theme = saved;
+				} catch {
+					theme = "";
+				}
+				if (!theme) {
+					theme = window.matchMedia?.("(prefers-color-scheme: dark)")?.matches ? "dark" : "light";
+				}
+				document.documentElement.classList.toggle("theme-dark", theme === "dark");
+			})();
+		</script>
 	</head>
 	<body class="ask-body">
 		<div class="ask-page" data-chat-page>
@@ -454,6 +470,7 @@ const originSections = [
 
 			function applyTheme(theme: "light" | "dark") {
 				const isDark = theme === "dark";
+				document.documentElement.classList.toggle("theme-dark", isDark);
 				document.body.classList.toggle("theme-dark", isDark);
 				if (themeButton instanceof HTMLButtonElement) {
 					themeButton.setAttribute("aria-pressed", String(isDark));
@@ -473,14 +490,71 @@ const originSections = [
 
 			applyTheme(getInitialTheme());
 
-			themeButton?.addEventListener("click", () => {
-				const nextTheme = document.body.classList.contains("theme-dark") ? "light" : "dark";
-				applyTheme(nextTheme);
+			function persistTheme(theme: "light" | "dark") {
 				try {
-					localStorage.setItem(themeStorageKey, nextTheme);
+					localStorage.setItem(themeStorageKey, theme);
 				} catch {
 					// Ignore storage failures.
 				}
+			}
+
+			function animateThemeSwitch(nextTheme: "light" | "dark") {
+				if (!(themeButton instanceof HTMLButtonElement)) {
+					applyTheme(nextTheme);
+					persistTheme(nextTheme);
+					return;
+				}
+
+				const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+				const supportsViewTransition = "startViewTransition" in document;
+				const rect = themeButton.getBoundingClientRect();
+				const x = rect.left + rect.width / 2;
+				const y = rect.top + rect.height / 2;
+
+				document.documentElement.style.setProperty("--theme-x", `${x}px`);
+				document.documentElement.style.setProperty("--theme-y", `${y}px`);
+				document.documentElement.classList.add("theme-is-switching");
+
+				const finish = () => {
+					persistTheme(nextTheme);
+					window.setTimeout(() => {
+						document.documentElement.classList.remove("theme-is-switching");
+					}, 120);
+				};
+
+				if (!supportsViewTransition || prefersReducedMotion) {
+					applyTheme(nextTheme);
+					finish();
+					return;
+				}
+
+				const transition = document.startViewTransition(() => applyTheme(nextTheme));
+				transition.ready
+					.then(() => {
+						const endRadius = Math.hypot(
+							Math.max(x, window.innerWidth - x),
+							Math.max(y, window.innerHeight - y),
+						);
+						document.documentElement.animate(
+							{
+								clipPath: [
+									`circle(0px at ${x}px ${y}px)`,
+									`circle(${endRadius}px at ${x}px ${y}px)`,
+								],
+							},
+							{
+								duration: 760,
+								easing: "cubic-bezier(0.22, 1, 0.36, 1)",
+								pseudoElement: "::view-transition-new(root)",
+							},
+						);
+					})
+					.finally(finish);
+			}
+
+			themeButton?.addEventListener("click", () => {
+				const nextTheme = document.body.classList.contains("theme-dark") ? "light" : "dark";
+				animateThemeSwitch(nextTheme);
 			});
 
 			function setView(viewName: string) {
@@ -594,10 +668,23 @@ const originSections = [
 		--ask-mono-font: "Space Grotesk", "SFMono-Regular", "Menlo", "Consolas", monospace;
 		--ask-title-font: var(--ask-ming-font);
 		--ask-antique-font: var(--ask-kai-font);
+		--theme-duration: 620ms;
+		--theme-ease: cubic-bezier(0.22, 1, 0.36, 1);
 		color-scheme: light;
 	}
 
-	body.ask-body.theme-dark {
+	html {
+		background: #f8f7f2;
+		transition: background-color var(--theme-duration) var(--theme-ease);
+	}
+
+	html.theme-dark {
+		background: #050c13;
+		color-scheme: dark;
+	}
+
+	body.ask-body.theme-dark,
+	html.theme-dark body.ask-body {
 		--ask-bg: #050c13;
 		--ask-surface: #0a151c;
 		--ask-panel: #0e1f24;
@@ -626,6 +713,18 @@ const originSections = [
 		color-scheme: dark;
 	}
 
+	::view-transition-old(root),
+	::view-transition-new(root) {
+		animation: none;
+		mix-blend-mode: normal;
+	}
+
+	html.theme-is-switching::view-transition-old(root),
+	html.theme-is-switching::view-transition-new(root) {
+		animation-duration: 760ms;
+		animation-timing-function: var(--theme-ease);
+	}
+
 	* {
 		box-sizing: border-box;
 	}
@@ -639,7 +738,51 @@ const originSections = [
 			var(--ask-bg);
 		color: var(--ask-ink);
 		font-family: "Songti SC", "Noto Serif SC", "Source Han Serif SC", Georgia, serif;
-		transition: background-color 0.28s ease, color 0.28s ease;
+		transition:
+			background-color var(--theme-duration) var(--theme-ease),
+			color var(--theme-duration) var(--theme-ease);
+	}
+
+	.ask-topbar,
+	.brand,
+	.brand-copy em,
+	.nav-item,
+	.search-box,
+	.search-box input,
+	.search-box kbd,
+	.icon-button,
+	.profile-button,
+	.hero h1,
+	.subhead,
+	.prompt-card,
+	.question-badge,
+	.answer-avatar,
+	.answer-card,
+	.answer-quote,
+	.answer-quote figcaption,
+	.quote-translation,
+	.answer-interpretation h2,
+	.citation-list,
+	.citation-list strong,
+	.citation-item,
+	.composer,
+	.composer::after,
+	.quick-questions button,
+	.composer textarea,
+	.disclaimer,
+	.origin-mark,
+	.origin-code,
+	.origin-section,
+	.origin-section h2,
+	.origin-section p {
+		transition:
+			background-color var(--theme-duration) var(--theme-ease),
+			background var(--theme-duration) var(--theme-ease),
+			border-color var(--theme-duration) var(--theme-ease),
+			box-shadow var(--theme-duration) var(--theme-ease),
+			color var(--theme-duration) var(--theme-ease),
+			opacity var(--theme-duration) var(--theme-ease),
+			transform 260ms var(--theme-ease);
 	}
 
 	button,
@@ -829,6 +972,48 @@ const originSections = [
 	.theme-button[aria-pressed="true"] {
 		background: var(--ask-soft);
 		color: var(--ask-primary-dark);
+	}
+
+	.theme-button {
+		position: relative;
+		overflow: hidden;
+		border: 1px solid transparent;
+	}
+
+	.theme-button::before {
+		content: "";
+		position: absolute;
+		inset: 4px;
+		border-radius: inherit;
+		background: radial-gradient(circle, var(--ask-soft), transparent 68%);
+		opacity: 0;
+		transform: scale(0.55);
+		transition:
+			opacity 420ms var(--theme-ease),
+			transform 520ms var(--theme-ease);
+	}
+
+	.theme-button svg {
+		position: relative;
+		z-index: 1;
+		transition:
+			transform 520ms var(--theme-ease),
+			opacity 420ms var(--theme-ease);
+	}
+
+	.theme-button:hover {
+		border-color: var(--ask-line);
+		transform: translateY(-1px);
+	}
+
+	.theme-button:hover::before,
+	.theme-button[aria-pressed="true"]::before {
+		opacity: 1;
+		transform: scale(1);
+	}
+
+	.theme-button[aria-pressed="true"] svg {
+		transform: rotate(135deg) scale(0.88);
 	}
 
 	.profile-button {

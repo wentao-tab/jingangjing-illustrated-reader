@@ -125,44 +125,46 @@ const originSections = [
 			</header>
 
 			<main class="chat-shell app-view" data-view-panel="chat">
-				<section class="hero" aria-labelledby="page-title">
-					<h1 id="page-title">应作如是</h1>
-					<p class="subhead">收录 <span class="subhead-number">30</span> 部佛经与古文典籍，你所问的关于佛法、人生、心念的一切，皆有经典可依的回答</p>
-				</section>
+				<section class="chat-scroll" data-chat-scroll>
+					<section class="hero" aria-labelledby="page-title">
+						<h1 id="page-title">应作如是</h1>
+						<p class="subhead">收录 <span class="subhead-number">30</span> 部佛经与古文典籍，你所问的关于佛法、人生、心念的一切，皆有经典可依的回答</p>
+					</section>
 
-				<section class="conversation" aria-label="问答示例" data-conversation>
-					<div class="prompt-row">
-						<button class="prompt-card" type="button" data-question={sampleQuestions[0]} data-current-question>
-							<span data-current-question-text>{sampleQuestions[0]}</span>
-						</button>
-						<span class="question-badge" aria-hidden="true">问</span>
-					</div>
-
-					<article class="answer-row">
-						<div class="answer-avatar" aria-hidden="true">
-							<span>观</span>
+					<section class="conversation" aria-label="问答示例" data-conversation>
+						<div class="prompt-row">
+							<button class="prompt-card" type="button" data-question={sampleQuestions[0]} data-current-question>
+								<span data-current-question-text>{sampleQuestions[0]}</span>
+							</button>
+							<span class="question-badge" aria-hidden="true">问</span>
 						</div>
-						<div class="answer-card" data-answer-card>
-							<p>「应作如是观」不是让人冷漠地否定世界，而是提醒我们：眼前的一切都在因缘中生起，也会在因缘中变化。</p>
-							<p>所以面对顺境，不必把它抓成永恒；面对困境，也不用把它认成终局。能看见事物的流动性，心就少一点被外相牵走。</p>
-							<p>放到日常里，就是认真做该做的事，但不让结果占据全部的心。看见、承受、行动，然后给变化留下空间。</p>
-						</div>
-					</article>
 
-					<div class="answer-actions" aria-label="回答操作">
-						<button type="button" aria-label="复制">
-							<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 8h10v10H8zM6 16H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></svg>
-						</button>
-						<button type="button" aria-label="分享">
-							<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M5 14v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4" /></svg>
-						</button>
-						<button type="button" aria-label="赞同">
-							<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 11v9M7 11H4v9h3M7 11l4-7a2 2 0 0 1 3 1.8V9h4a2 2 0 0 1 1.9 2.5l-1.4 6A2 2 0 0 1 16.6 19H7" /></svg>
-						</button>
-						<button type="button" aria-label="不赞同">
-							<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 13V4M7 13H4V4h3M7 13l4 7a2 2 0 0 0 3-1.8V15h4a2 2 0 0 0 1.9-2.5l-1.4-6A2 2 0 0 0 16.6 5H7" /></svg>
-						</button>
-					</div>
+						<article class="answer-row">
+							<div class="answer-avatar" aria-hidden="true">
+								<span>观</span>
+							</div>
+							<div class="answer-card" data-answer-card>
+								<p>「应作如是观」不是让人冷漠地否定世界，而是提醒我们：眼前的一切都在因缘中生起，也会在因缘中变化。</p>
+								<p>所以面对顺境，不必把它抓成永恒；面对困境，也不用把它认成终局。能看见事物的流动性，心就少一点被外相牵走。</p>
+								<p>放到日常里，就是认真做该做的事，但不让结果占据全部的心。看见、承受、行动，然后给变化留下空间。</p>
+							</div>
+						</article>
+
+						<div class="answer-actions" aria-label="回答操作">
+							<button type="button" aria-label="复制">
+								<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 8h10v10H8zM6 16H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></svg>
+							</button>
+							<button type="button" aria-label="分享">
+								<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M5 14v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4" /></svg>
+							</button>
+							<button type="button" aria-label="赞同">
+								<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 11v9M7 11H4v9h3M7 11l4-7a2 2 0 0 1 3 1.8V9h4a2 2 0 0 1 1.9 2.5l-1.4 6A2 2 0 0 1 16.6 19H7" /></svg>
+							</button>
+							<button type="button" aria-label="不赞同">
+								<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 13V4M7 13H4V4h3M7 13l4 7a2 2 0 0 0 3-1.8V15h4a2 2 0 0 0 1.9-2.5l-1.4-6A2 2 0 0 0 16.6 5H7" /></svg>
+							</button>
+						</div>
+					</section>
 				</section>
 
 				<section class="composer-panel" aria-label="提问输入">
@@ -229,6 +231,7 @@ const originSections = [
 			const input = page?.querySelector("[data-question-input]");
 			const initialAnswerCard = page?.querySelector("[data-answer-card]");
 			const conversation = page?.querySelector("[data-conversation]");
+			const chatScroll = page?.querySelector("[data-chat-scroll]");
 			const composer = page?.querySelector("[data-composer]");
 			const questionButtons = page?.querySelectorAll("[data-question]");
 			const sendButton = page?.querySelector(".send-button");
@@ -265,10 +268,6 @@ const originSections = [
 
 			let conversationHistory: StoredTurn[] = [];
 
-			function setConversationMode(hasConversation: boolean) {
-				page?.classList.toggle("has-conversation", hasConversation);
-			}
-
 			function appendParagraph(container: Element, text: string) {
 				const paragraph = document.createElement("p");
 				paragraph.textContent = text;
@@ -289,7 +288,8 @@ const originSections = [
 			function scrollAnswerToEnd(target = activeAnswerCard) {
 				if (!conversation || !target) return;
 				requestAnimationFrame(() => {
-					conversation.scrollTo({ top: conversation.scrollHeight, behavior: "smooth" });
+					const scrollContainer = chatScroll instanceof HTMLElement ? chatScroll : conversation;
+					scrollContainer.scrollTo({ top: scrollContainer.scrollHeight, behavior: "smooth" });
 					const lastContent = target.lastElementChild;
 					if (lastContent instanceof HTMLElement) {
 						lastContent.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
@@ -416,7 +416,6 @@ const originSections = [
 
 				turn.append(promptRow, answerRow);
 				conversation.append(turn);
-				conversation.scrollTo({ top: conversation.scrollHeight, behavior: "smooth" });
 				return card;
 			}
 
@@ -442,10 +441,8 @@ const originSections = [
 						const card = createConversationTurn(turn.question);
 						renderKnowledgeResult(turn.result, card);
 					});
-					setConversationMode(true);
 				} catch {
 					conversationHistory = [];
-					setConversationMode(false);
 				}
 			}
 
@@ -614,7 +611,6 @@ const originSections = [
 					input.focus();
 					return;
 				}
-				setConversationMode(true);
 				updateCurrentQuestion(question);
 				const turnAnswerCard = createConversationTurn(question);
 				activeAnswerCard = turnAnswerCard;
@@ -1037,17 +1033,12 @@ const originSections = [
 
 	.chat-shell {
 		display: grid;
-		grid-template-rows: auto minmax(0, 1fr) auto;
+		grid-template-rows: minmax(0, 1fr) auto;
 		width: min(840px, 100%);
 		min-width: 0;
 		height: calc(100vh - 96px);
 		margin: 0 auto;
 		padding-top: 22px;
-		transition: padding-top 520ms cubic-bezier(0.22, 1, 0.36, 1);
-	}
-
-	.has-conversation .chat-shell {
-		padding-top: 0;
 	}
 
 	.origin-shell {
@@ -1163,6 +1154,7 @@ const originSections = [
 		margin-top: 18px;
 	}
 
+	.chat-scroll,
 	.hero,
 	.conversation,
 	.composer-panel {
@@ -1170,25 +1162,16 @@ const originSections = [
 		min-width: 0;
 	}
 
-	.hero {
-		max-height: 132px;
-		padding: 0 0 28px;
-		overflow: hidden;
-		text-align: center;
-		transition:
-			max-height 560ms cubic-bezier(0.22, 1, 0.36, 1),
-			padding 560ms cubic-bezier(0.22, 1, 0.36, 1),
-			opacity 320ms ease,
-			transform 560ms cubic-bezier(0.22, 1, 0.36, 1);
-		will-change: max-height, opacity, transform;
+	.chat-scroll {
+		min-height: 0;
+		overflow-y: auto;
+		padding: 0 6px 18px;
+		scrollbar-gutter: stable;
 	}
 
-	.has-conversation .hero {
-		max-height: 0;
-		padding-bottom: 0;
-		opacity: 0;
-		pointer-events: none;
-		transform: translateY(-18px) scale(0.985);
+	.hero {
+		padding: 0 0 28px;
+		text-align: center;
 	}
 
 	.hero h1 {
@@ -1231,9 +1214,6 @@ const originSections = [
 		align-content: start;
 		min-height: 0;
 		margin-top: 12px;
-		overflow-y: auto;
-		padding: 0 6px 18px;
-		scrollbar-gutter: stable;
 	}
 
 	.conversation-turn {

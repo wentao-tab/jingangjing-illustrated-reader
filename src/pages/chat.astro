@@ -1042,116 +1042,210 @@ const originSections = [
 	}
 
 	.origin-shell {
-		width: min(980px, 100%);
+		position: relative;
+		width: min(1120px, 100%);
 		height: calc(100vh - 96px);
 		margin: 0 auto;
 		overflow-y: auto;
-		padding: clamp(48px, 7vh, 76px) 0 80px;
+		padding: clamp(46px, 7vh, 80px) clamp(18px, 3vw, 34px) 92px;
 		scrollbar-gutter: stable;
+	}
+
+	.origin-shell::before,
+	.origin-shell::after {
+		content: "";
+		position: fixed;
+		z-index: -1;
+		width: 30rem;
+		aspect-ratio: 1;
+		border-radius: 50%;
+		pointer-events: none;
+		filter: blur(22px);
+		opacity: 0.45;
+	}
+
+	.origin-shell::before {
+		top: 16vh;
+		left: 8vw;
+		background: radial-gradient(circle, rgba(197, 160, 89, 0.12), transparent 68%);
+	}
+
+	.origin-shell::after {
+		right: 5vw;
+		bottom: 8vh;
+		background: radial-gradient(circle, rgba(61, 104, 92, 0.08), transparent 70%);
 	}
 
 	.origin-hero {
 		display: grid;
 		justify-items: center;
-		gap: 16px;
+		gap: 12px;
+		max-width: 860px;
+		margin: 0 auto;
 		text-align: center;
 	}
 
 	.origin-mark {
 		display: grid;
-		width: 78px;
+		width: 66px;
 		aspect-ratio: 1;
 		place-items: center;
 		border-radius: 50%;
-		background: var(--ask-soft);
-		color: var(--ask-primary);
-		box-shadow: inset 0 0 0 1px var(--ask-line);
+		background:
+			linear-gradient(180deg, rgba(255, 253, 248, 0.88), rgba(245, 237, 222, 0.72)),
+			var(--ask-soft);
+		color: var(--ask-primary-dark);
+		box-shadow:
+			inset 0 0 0 1px rgba(165, 101, 5, 0.16),
+			0 18px 42px rgba(74, 56, 35, 0.08);
 	}
 
 	.origin-mark svg {
-		width: 34px;
-		height: 34px;
-		stroke-width: 1.7;
+		width: 28px;
+		height: 28px;
+		stroke-width: 1.55;
 	}
 
 	.origin-eyebrow {
-		margin: 4px 0 0;
+		margin: 14px 0 0;
 		color: var(--ask-muted);
 		font-family: var(--ask-mono-font);
-		font-size: 13px;
-		letter-spacing: 0.18em;
+		font-size: 12px;
+		letter-spacing: 0.24em;
+		text-transform: uppercase;
+		opacity: 0.82;
 	}
 
 	.origin-hero h1 {
 		margin: 0;
 		color: var(--ask-ink);
-		font-family: var(--ask-title-font);
-		font-size: clamp(48px, 7vw, 86px);
-		font-weight: 400;
-		letter-spacing: 0.06em;
-		line-height: 1;
+		font-family: "Songti SC", "STSong", "Noto Serif SC", serif;
+		font-size: clamp(56px, 6.2vw, 98px);
+		font-weight: 300;
+		letter-spacing: 0.12em;
+		line-height: 0.95;
 	}
 
 	.origin-hero p:last-child {
-		margin: 4px 0 0;
+		max-width: 720px;
+		margin: 10px auto 0;
 		color: var(--ask-muted);
-		font-family: var(--ask-kai-font);
-		font-size: clamp(18px, 1.6vw, 24px);
-		letter-spacing: 0.04em;
+		font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+		font-size: clamp(16px, 1.25vw, 20px);
+		font-weight: 400;
+		line-height: 1.85;
+		letter-spacing: 0;
+		text-wrap: balance;
 	}
 
 	.origin-divider {
 		height: 1px;
-		margin: clamp(44px, 8vh, 86px) 0 clamp(34px, 6vh, 62px);
-		background: linear-gradient(90deg, transparent, var(--ask-line), transparent);
+		max-width: 860px;
+		margin: clamp(48px, 8vh, 88px) auto clamp(30px, 5vh, 48px);
+		background: linear-gradient(90deg, transparent, rgba(165, 101, 5, 0.2), var(--ask-line), transparent);
 	}
 
 	.origin-code {
-		margin: 0 auto clamp(34px, 6vh, 56px);
-		padding: 24px 30px;
-		border: 1px solid var(--ask-line);
-		border-radius: 8px;
-		background: var(--ask-soft);
+		width: min(760px, 100%);
+		margin: 0 auto clamp(44px, 7vh, 70px);
+		padding: 26px 30px;
+		border: 1px solid rgba(165, 101, 5, 0.16);
+		border-radius: 14px;
+		background:
+			linear-gradient(135deg, rgba(255, 253, 248, 0.88), rgba(245, 237, 222, 0.64)),
+			var(--ask-surface);
 		color: var(--ask-muted);
+		color: color-mix(in srgb, var(--ask-muted) 86%, var(--ask-primary-dark));
 		white-space: pre-wrap;
 		font-family: var(--ask-mono-font);
-		font-size: clamp(15px, 1.25vw, 18px);
-		line-height: 1.9;
+		font-size: clamp(14px, 1.08vw, 16px);
+		line-height: 2;
+		box-shadow:
+			0 24px 70px rgba(62, 48, 30, 0.08),
+			inset 0 1px 0 rgba(255, 255, 255, 0.62);
 	}
 
 	.origin-article {
 		display: grid;
-		gap: 38px;
-		width: min(850px, 100%);
+		gap: 0;
+		width: min(940px, 100%);
 		margin: 0 auto;
+		counter-reset: origin-section;
 	}
 
 	.origin-section {
-		padding-bottom: 34px;
+		display: grid;
+		grid-template-columns: minmax(170px, 220px) minmax(0, 1fr);
+		gap: clamp(28px, 5vw, 72px);
+		counter-increment: origin-section;
+		padding: clamp(38px, 5.5vh, 58px) 0;
 		border-bottom: 1px solid var(--ask-line);
 	}
 
+	.origin-section:first-child {
+		border-top: 1px solid var(--ask-line);
+	}
+
 	.origin-section h2 {
-		margin: 0 0 18px;
+		position: relative;
+		grid-column: 1;
+		grid-row: 1 / span 12;
+		margin: 0;
 		color: var(--ask-primary-dark);
-		font-family: var(--ask-kai-font);
-		font-size: clamp(24px, 2vw, 32px);
-		font-weight: 600;
-		letter-spacing: 0.03em;
+		font-family: "Songti SC", "STSong", "Noto Serif SC", serif;
+		font-size: clamp(21px, 1.7vw, 28px);
+		font-weight: 500;
+		line-height: 1.35;
+		letter-spacing: 0.02em;
+		text-wrap: balance;
+	}
+
+	.origin-section h2::before {
+		content: counter(origin-section, decimal-leading-zero);
+		display: block;
+		margin-bottom: 14px;
+		color: var(--ask-muted);
+		font-family: var(--ask-mono-font);
+		font-size: 12px;
+		font-weight: 400;
+		letter-spacing: 0.2em;
+		opacity: 0.7;
 	}
 
 	.origin-section p {
+		grid-column: 2;
+		max-width: 680px;
 		margin: 0;
 		color: var(--ask-ink);
-		font-family: var(--ask-kai-font);
-		font-size: clamp(18px, 1.45vw, 23px);
-		line-height: 2.05;
-		letter-spacing: 0.02em;
+		color: color-mix(in srgb, var(--ask-ink) 88%, var(--ask-muted));
+		font-family: ui-serif, "Songti SC", "STSong", "Noto Serif SC", serif;
+		font-size: clamp(17px, 1.24vw, 20px);
+		line-height: 2.08;
+		letter-spacing: 0.01em;
 		text-wrap: pretty;
 	}
 
+	html.theme-dark .origin-mark {
+		background:
+			linear-gradient(180deg, rgba(215, 168, 86, 0.14), rgba(250, 248, 245, 0.05)),
+			rgba(215, 168, 86, 0.08);
+		box-shadow:
+			inset 0 0 0 1px rgba(215, 168, 86, 0.22),
+			0 18px 42px rgba(0, 0, 0, 0.22);
+	}
+
+	html.theme-dark .origin-code {
+		border-color: rgba(215, 168, 86, 0.2);
+		background:
+			linear-gradient(135deg, rgba(250, 248, 245, 0.06), rgba(215, 168, 86, 0.08)),
+			rgba(8, 18, 24, 0.72);
+		box-shadow:
+			0 24px 70px rgba(0, 0, 0, 0.24),
+			inset 0 1px 0 rgba(255, 255, 255, 0.04);
+	}
+
 	.origin-section p + p {
-		margin-top: 18px;
+		margin-top: 20px;
 	}
 
 	.chat-scroll,
@@ -1579,9 +1673,50 @@ const originSections = [
 			padding: 34px 4px 68px;
 		}
 
+		.origin-shell::before,
+		.origin-shell::after {
+			display: none;
+		}
+
+		.origin-hero {
+			gap: 10px;
+		}
+
+		.origin-mark {
+			width: 58px;
+		}
+
+		.origin-hero h1 {
+			font-size: clamp(48px, 16vw, 68px);
+			letter-spacing: 0.08em;
+		}
+
+		.origin-hero p:last-child {
+			font-size: 16px;
+			line-height: 1.75;
+		}
+
 		.origin-code {
 			padding: 18px 16px;
 			font-size: 13px;
+		}
+
+		.origin-article {
+			width: min(620px, 100%);
+		}
+
+		.origin-section {
+			display: block;
+			padding: 32px 0;
+		}
+
+		.origin-section h2 {
+			margin-bottom: 16px;
+			font-size: 24px;
+		}
+
+		.origin-section h2::before {
+			margin-bottom: 10px;
 		}
 
 		.origin-section p {

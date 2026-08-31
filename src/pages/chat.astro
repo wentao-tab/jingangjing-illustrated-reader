@@ -131,49 +131,19 @@ const originSections = [
 						<p class="subhead">收录 <span class="subhead-number">30</span> 部佛经与古文典籍，你所问的关于佛法、人生、心念的一切，皆有经典可依的回答</p>
 					</section>
 
-					<section class="conversation" aria-label="问答示例" data-conversation>
-						<div class="prompt-row">
-							<button class="prompt-card" type="button" data-question={sampleQuestions[0]} data-current-question>
-								<span data-current-question-text>{sampleQuestions[0]}</span>
-							</button>
-							<span class="question-badge" aria-hidden="true">问</span>
-						</div>
-
-						<article class="answer-row">
-							<div class="answer-avatar" aria-hidden="true">
-								<span>观</span>
+					<section class="conversation" aria-label="问答内容" data-conversation>
+						<div class="empty-state" data-empty-state>
+							<p class="empty-state-label">先从一个具体问题开始</p>
+							<div class="empty-state-questions" aria-label="推荐问题">
+								{sampleQuestions.map((question) => (
+									<button class="empty-state-question" type="button" data-question={question}>{question}</button>
+								))}
 							</div>
-							<div class="answer-card" data-answer-card>
-								<p>「应作如是观」不是让人冷漠地否定世界，而是提醒我们：眼前的一切都在因缘中生起，也会在因缘中变化。</p>
-								<p>所以面对顺境，不必把它抓成永恒；面对困境，也不用把它认成终局。能看见事物的流动性，心就少一点被外相牵走。</p>
-								<p>放到日常里，就是认真做该做的事，但不让结果占据全部的心。看见、承受、行动，然后给变化留下空间。</p>
-							</div>
-						</article>
-
-						<div class="answer-actions" aria-label="回答操作">
-							<button type="button" aria-label="复制">
-								<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 8h10v10H8zM6 16H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></svg>
-							</button>
-							<button type="button" aria-label="分享">
-								<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M5 14v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4" /></svg>
-							</button>
-							<button type="button" aria-label="赞同">
-								<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 11v9M7 11H4v9h3M7 11l4-7a2 2 0 0 1 3 1.8V9h4a2 2 0 0 1 1.9 2.5l-1.4 6A2 2 0 0 1 16.6 19H7" /></svg>
-							</button>
-							<button type="button" aria-label="不赞同">
-								<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 13V4M7 13H4V4h3M7 13l4 7a2 2 0 0 0 3-1.8V15h4a2 2 0 0 0 1.9-2.5l-1.4-6A2 2 0 0 0 16.6 5H7" /></svg>
-							</button>
 						</div>
 					</section>
 				</section>
 
 				<section class="composer-panel" aria-label="提问输入">
-					<div class="quick-questions" aria-label="推荐问题">
-						{sampleQuestions.map((question) => (
-							<button type="button" data-question={question}>{question}</button>
-						))}
-					</div>
-
 					<form class="composer" data-composer>
 						<div class="composer-tools" aria-label="输入工具">
 							<button type="button" aria-label="历史问题">
@@ -229,18 +199,16 @@ const originSections = [
 
 			const page = document.querySelector("[data-chat-page]");
 			const input = page?.querySelector("[data-question-input]");
-			const initialAnswerCard = page?.querySelector("[data-answer-card]");
 			const conversation = page?.querySelector("[data-conversation]");
 			const chatScroll = page?.querySelector("[data-chat-scroll]");
 			const composer = page?.querySelector("[data-composer]");
+			const emptyState = page?.querySelector("[data-empty-state]");
 			const questionButtons = page?.querySelectorAll("[data-question]");
 			const sendButton = page?.querySelector(".send-button");
-			const currentQuestion = page?.querySelector("[data-current-question]");
-			const currentQuestionText = page?.querySelector("[data-current-question-text]");
 			const themeButton = page?.querySelector("[data-theme-toggle]");
 			const viewButtons = page?.querySelectorAll("[data-view-target]");
 			const viewPanels = page?.querySelectorAll("[data-view-panel]");
-			let activeAnswerCard = initialAnswerCard;
+			let activeAnswerCard: Element | null = null;
 			const storageKey = "yingzuo-chat-session";
 			const themeStorageKey = "yingzuo-chat-theme";
 
@@ -351,7 +319,7 @@ const originSections = [
 				const interpretation = document.createElement("section");
 				interpretation.className = "answer-interpretation";
 				const heading = document.createElement("h2");
-				heading.textContent = "解析";
+				heading.textContent = "回答";
 				interpretation.append(heading);
 
 				answerLines(result.interpretation || result.answer || "").forEach((line) => appendParagraph(interpretation, line));
@@ -416,6 +384,11 @@ const originSections = [
 
 				turn.append(promptRow, answerRow);
 				conversation.append(turn);
+				promptCard.addEventListener("click", () => {
+					if (!(input instanceof HTMLTextAreaElement)) return;
+					input.value = question;
+					submitQuestion();
+				});
 				return card;
 			}
 
@@ -436,6 +409,7 @@ const originSections = [
 					if (!Array.isArray(saved) || !saved.length) return;
 					conversationHistory = saved.filter((item) => item?.question && item?.result).slice(-20);
 					if (!conversationHistory.length) return;
+					if (emptyState instanceof HTMLElement) emptyState.hidden = true;
 					conversation.innerHTML = "";
 					conversationHistory.forEach((turn) => {
 						const card = createConversationTurn(turn.question);
@@ -443,15 +417,6 @@ const originSections = [
 					});
 				} catch {
 					conversationHistory = [];
-				}
-			}
-
-			function updateCurrentQuestion(question: string) {
-				if (currentQuestion instanceof HTMLButtonElement) {
-					currentQuestion.setAttribute("data-question", question);
-				}
-				if (currentQuestionText) {
-					currentQuestionText.textContent = question;
 				}
 			}
 
@@ -589,7 +554,7 @@ const originSections = [
 				button.addEventListener("click", () => {
 					if (!(input instanceof HTMLTextAreaElement)) return;
 					input.value = button.getAttribute("data-question") ?? "";
-					input.focus();
+					submitQuestion();
 				});
 			});
 
@@ -611,11 +576,11 @@ const originSections = [
 					input.focus();
 					return;
 				}
-				updateCurrentQuestion(question);
+				if (emptyState instanceof HTMLElement) emptyState.hidden = true;
 				const turnAnswerCard = createConversationTurn(question);
 				activeAnswerCard = turnAnswerCard;
 				turnAnswerCard?.setAttribute("aria-busy", "true");
-				renderAnswer(`正在从本地知识库检索：「${question}」`, [], turnAnswerCard);
+				renderAnswer("先把你的问题放到桌面上。\n\n正在从经典里找相关依据…", [], turnAnswerCard);
 				if (sendButton instanceof HTMLButtonElement) sendButton.disabled = true;
 
 				try {
@@ -1319,6 +1284,53 @@ const originSections = [
 		border-top: 1px solid var(--ask-line);
 	}
 
+	.empty-state {
+		display: grid;
+		gap: 12px;
+		width: min(100%, 720px);
+		margin: clamp(42px, 9vh, 96px) auto 0;
+		text-align: center;
+	}
+
+	.empty-state[hidden] {
+		display: none;
+	}
+
+	.empty-state-label {
+		margin: 0;
+		color: var(--ask-muted);
+		font-family: var(--ask-kai-font);
+		font-size: 15px;
+	}
+
+	.empty-state-questions {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 10px;
+	}
+
+	.empty-state-question {
+		min-height: 68px;
+		padding: 12px 14px;
+		border: 1px solid var(--ask-line);
+		border-radius: 12px;
+		background: var(--ask-card-bg);
+		color: var(--ask-ink);
+		box-shadow: var(--ask-shadow);
+		cursor: pointer;
+		font-family: var(--ask-kai-font);
+		font-size: 14px;
+		line-height: 1.55;
+		text-align: left;
+		transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+	}
+
+	.empty-state-question:hover {
+		border-color: var(--ask-accent);
+		background: var(--ask-soft);
+		transform: translateY(-2px);
+	}
+
 	.prompt-row {
 		display: flex;
 		justify-content: flex-end;
@@ -1725,6 +1737,14 @@ const originSections = [
 
 		.hero {
 			padding-bottom: 28px;
+		}
+
+		.empty-state {
+			margin-top: 28px;
+		}
+
+		.empty-state-questions {
+			grid-template-columns: 1fr;
 		}
 
 		.subhead {

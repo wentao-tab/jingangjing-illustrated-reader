@@ -1,6 +1,6 @@
 {
   "version": "0.1.0",
-  "updatedAt": "2026-06-21",
+  "updatedAt": "2026-08-31",
   "purpose": "应作如是问答知识库第一批经典清单",
   "items": [
     {
@@ -64,8 +64,8 @@
       },
       "status": {
         "catalog": "ready",
-        "content": "pending",
-        "segmentation": "pending",
+        "content": "curated-passages-ready",
+        "segmentation": "partial",
         "embedding": "pending",
         "qaSeeds": "pending"
       }
@@ -152,8 +152,8 @@
       },
       "status": {
         "catalog": "ready",
-        "content": "pending",
-        "segmentation": "pending",
+        "content": "curated-passages-ready",
+        "segmentation": "partial",
         "embedding": "pending",
         "qaSeeds": "pending"
       }
@@ -174,8 +174,118 @@
       },
       "status": {
         "catalog": "ready",
-        "content": "private-source-ready",
-        "segmentation": "pending",
+        "content": "curated-passages-ready",
+        "segmentation": "partial",
+        "embedding": "pending",
+        "qaSeeds": "pending"
+      }
+    },
+    {
+      "id": "heart-sutra",
+      "title": "般若波罗蜜多心经",
+      "titleTraditional": "般若波羅蜜多心經",
+      "kind": "sutra",
+      "priority": 9,
+      "dynasty": "唐",
+      "translatorOrAuthor": "玄奘译",
+      "volumeCount": 1,
+      "topics": ["般若", "五蕴皆空", "心无罣碍", "焦虑", "观照"],
+      "source": {
+        "preferred": "cbeta-curated",
+        "referenceUrl": "https://github.com/cbeta-org/xml-p5/blob/master/T/T08/T08n0251.xml"
+      },
+      "status": {
+        "catalog": "ready",
+        "content": "curated-passages-ready",
+        "segmentation": "partial",
+        "embedding": "pending",
+        "qaSeeds": "pending"
+      }
+    },
+    {
+      "id": "vimalakirti-sutra",
+      "title": "维摩诘所说经",
+      "titleTraditional": "維摩詰所說經",
+      "kind": "sutra",
+      "priority": 10,
+      "dynasty": "姚秦",
+      "translatorOrAuthor": "鸠摩罗什译",
+      "volumeCount": 3,
+      "topics": ["直心", "净土", "心净", "关系", "不二"],
+      "source": {
+        "preferred": "cbeta-curated",
+        "referenceUrl": "https://github.com/cbeta-org/xml-p5/blob/master/T/T14/T14n0475.xml"
+      },
+      "status": {
+        "catalog": "ready",
+        "content": "curated-passages-ready",
+        "segmentation": "partial",
+        "embedding": "pending",
+        "qaSeeds": "pending"
+      }
+    },
+    {
+      "id": "bequeathed-teaching-sutra",
+      "title": "佛垂般涅槃略说教诫经",
+      "titleTraditional": "佛垂般涅槃略說教誡經",
+      "kind": "sutra",
+      "priority": 11,
+      "dynasty": "姚秦",
+      "translatorOrAuthor": "鸠摩罗什译",
+      "volumeCount": 1,
+      "topics": ["少欲", "知足", "精进", "戒律", "安乐"],
+      "source": {
+        "preferred": "cbeta-curated",
+        "referenceUrl": "https://github.com/cbeta-org/xml-p5/blob/master/T/T12/T12n0389.xml"
+      },
+      "status": {
+        "catalog": "ready",
+        "content": "curated-passages-ready",
+        "segmentation": "partial",
+        "embedding": "pending",
+        "qaSeeds": "pending"
+      }
+    },
+    {
+      "id": "avatamsaka-sutra",
+      "title": "大方广佛华严经",
+      "titleTraditional": "大方廣佛華嚴經",
+      "kind": "sutra",
+      "priority": 12,
+      "dynasty": "唐",
+      "translatorOrAuthor": "实叉难陀译",
+      "volumeCount": 80,
+      "topics": ["华严", "法界", "唯心", "缘起", "菩萨行"],
+      "source": {
+        "preferred": "cbeta-curated",
+        "referenceUrl": "https://github.com/cbeta-org/xml-p5/blob/master/T/T10/T10n0279.xml"
+      },
+      "status": {
+        "catalog": "ready",
+        "content": "curated-passages-ready",
+        "segmentation": "partial",
+        "embedding": "pending",
+        "qaSeeds": "pending"
+      }
+    },
+    {
+      "id": "dhammapada",
+      "title": "法句经",
+      "titleTraditional": "法句經",
+      "kind": "sutra",
+      "priority": 13,
+      "dynasty": "吴",
+      "translatorOrAuthor": "维祇难等译",
+      "volumeCount": 2,
+      "topics": ["忍", "知足", "自守", "修心", "安乐"],
+      "source": {
+        "preferred": "cbeta-curated",
+        "referenceUrl": "https://github.com/cbeta-org/xml-p5/blob/master/T/T04/T04n0210.xml"
+      },
+      "status": {
+        "catalog": "ready",
+        "content": "curated-passages-ready",
+        "segmentation": "partial",
         "embedding": "pending",
         "qaSeeds": "pending"
       }

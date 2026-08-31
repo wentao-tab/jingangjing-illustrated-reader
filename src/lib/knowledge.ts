@@ -1,4 +1,5 @@
 import diamondSutra from "../data/diamond-sutra.json";
+import curatedPassages from "../data/knowledge/passages.json";
 import scripturesCatalog from "../data/knowledge/scriptures.json";
 import nanHuaijinOutline from "../data/knowledge/commentary-outlines/nan-huaijin-jingangjing.json";
 import platformSutraOutline from "../data/knowledge/commentary-outlines/tanjing-shangrong.json";
@@ -27,6 +28,9 @@ export type KnowledgeCitation = {
 	translation?: string;
 	sourceKind?: string;
 	author?: string;
+	sourceRef?: string;
+	topics?: string[];
+	keywords?: string[];
 	score: number;
 };
 
@@ -93,6 +97,44 @@ const topicTerms = [
 	"无我",
 	"法华",
 	"地藏",
+	"观照",
+	"五蕴皆空",
+	"心无罣碍",
+	"恐惧",
+	"焦虑",
+	"内耗",
+	"压力",
+	"失眠",
+	"杂念",
+	"情绪",
+	"无常",
+	"缘起",
+	"中道",
+	"知足",
+	"少欲",
+	"欲望",
+	"财富",
+	"比较",
+	"嗔恨",
+	"关系",
+	"直心",
+	"心净",
+	"禅定",
+	"内不乱",
+	"专注",
+	"疲惫",
+	"休息",
+	"化城",
+	"精进",
+	"低谷",
+	"自性",
+	"本自具足",
+	"自我价值",
+	"人生意义",
+	"孤独",
+	"空虚",
+	"痛苦",
+	"不公平",
 ];
 
 const sourceKindLabels: Record<string, string> = {
@@ -141,7 +183,14 @@ type KnowledgeEntry = {
 	translation?: string;
 	sourceKind: string;
 	author?: string;
+	sourceRef?: string;
+	topics?: string[];
+	keywords?: string[];
 	weight: number;
+};
+
+type CuratedPassage = Omit<KnowledgeEntry, "weight"> & {
+	weight?: number;
 };
 
 function normalizeText(value: string) {
@@ -201,6 +250,27 @@ function getQuestionTerms(question: string) {
 	if (normalized.includes("无念") || normalized.includes("坛经")) {
 		expandedTerms.push("坛经", "无念", "见性", "禅宗");
 	}
+	if (["焦虑", "内耗", "压力", "担心", "害怕", "恐惧"].some((term) => normalized.includes(term))) {
+		expandedTerms.push("心无罣碍", "五蕴皆空", "观照", "恐惧", "焦虑");
+	}
+	if (["失眠", "杂念", "胡思乱想", "静不下来", "停不下来"].some((term) => normalized.includes(term))) {
+		expandedTerms.push("无念", "禅定", "内不乱", "专注", "杂念");
+	}
+	if (["钱", "金钱", "物质", "消费", "财富", "不满足", "攀比"].some((term) => normalized.includes(term))) {
+		expandedTerms.push("知足", "少欲", "欲望", "财富", "比较");
+	}
+	if (["累", "疲惫", "倦怠", "放弃", "没结果", "低谷", "坚持不下去"].some((term) => normalized.includes(term))) {
+		expandedTerms.push("化城", "方便", "休息", "精进", "疲惫", "低谷");
+	}
+	if (["生气", "愤怒", "发火", "怨恨", "讨厌", "委屈", "报复"].some((term) => normalized.includes(term))) {
+		expandedTerms.push("忍", "自守", "嗔恨", "心净", "关系");
+	}
+	if (["不公平", "命运", "为什么是我", "改变不了", "困境"].some((term) => normalized.includes(term))) {
+		expandedTerms.push("缘起", "中道", "条件", "改变", "不公平");
+	}
+	if (["自卑", "没价值", "不自信", "讨好", "认可", "孤独", "空虚"].some((term) => normalized.includes(term))) {
+		expandedTerms.push("本自具足", "自我价值", "自性", "直心", "孤独", "空虚");
+	}
 
 	const chinesePairs = Array.from(question.matchAll(/[\u4e00-\u9fff]{2,}/g))
 		.flatMap(([word]) => {
@@ -226,17 +296,27 @@ function scoreText(question: string, text: string, weight = 1) {
 }
 
 function buildCatalogEntries(): KnowledgeEntry[] {
-	return (scripturesCatalog.items as CatalogItem[]).map((item) => ({
-		id: `catalog-${item.id}`,
-		scriptureId: item.id,
-		scriptureTitle: item.title,
-		position: item.priority,
-		type: "catalog",
-		originalText: `${item.title}：${item.topics?.join("、") || "佛教经典"}。${item.translatorOrAuthor || ""}${item.dynasty ? `，${item.dynasty}` : ""}`,
-		translation: item.status?.content === "ready" ? "本经典已有本地正文，可继续细读。" : "本经典已进入目录，正文待补全。",
-		sourceKind: "经典目录",
-		author: item.translatorOrAuthor,
-		weight: item.status?.content === "ready" ? 0.95 : 0.55,
+	return (scripturesCatalog.items as CatalogItem[]).map((item) => {
+		const hasContent = item.status?.content === "ready" || item.status?.content === "curated-passages-ready";
+		return {
+			id: `catalog-${item.id}`,
+			scriptureId: item.id,
+			scriptureTitle: item.title,
+			position: item.priority,
+			type: "catalog",
+			originalText: `${item.title}：${item.topics?.join("、") || "佛教经典"}。${item.translatorOrAuthor || ""}${item.dynasty ? `，${item.dynasty}` : ""}`,
+			translation: hasContent ? "本经典已有本地正文摘录，可继续细读。" : "本经典已进入目录，正文待补全。",
+			sourceKind: "经典目录",
+			author: item.translatorOrAuthor,
+			weight: hasContent ? 0.2 : 0.06,
+		};
+	});
+}
+
+function buildCuratedEntries(): KnowledgeEntry[] {
+	return (curatedPassages.items as CuratedPassage[]).map((item) => ({
+		...item,
+		weight: item.weight ?? 1.5,
 	}));
 }
 
@@ -288,6 +368,7 @@ function buildKnowledgeEntries(): KnowledgeEntry[] {
 		}));
 
 	return [
+		...buildCuratedEntries(),
 		...paragraphs,
 		...buildOutlineEntries(nanHuaijinOutline as OutlineSource),
 		...buildOutlineEntries(platformSutraOutline as OutlineSource),
@@ -306,13 +387,20 @@ function buildCitation(entry: KnowledgeEntry, score: number): KnowledgeCitation 
 		translation: entry.translation,
 		sourceKind: entry.sourceKind,
 		author: entry.author,
+		sourceRef: entry.sourceRef,
+		topics: entry.topics,
+		keywords: entry.keywords,
 		score,
 	};
 }
 
 function getMatchedTopics(question: string, citations: KnowledgeCitation[]) {
 	const questionText = normalizeText(question);
-	const citationText = normalizeText(citations.map((citation) => citation.originalText).join(" "));
+	const citationText = normalizeText(
+		citations
+			.flatMap((citation) => [citation.originalText, ...(citation.topics || []), ...(citation.keywords || [])])
+			.join(" ")
+	);
 	const questionTopics = topicTerms.filter((term) => questionText.includes(normalizeText(term)));
 	const expandedQuestionTopics = getQuestionTerms(question).filter((term) =>
 		topicTerms.some((topic) => normalizeText(topic) === normalizeText(term))
@@ -324,6 +412,34 @@ function getMatchedTopics(question: string, citations: KnowledgeCitation[]) {
 
 function getThemeGuidance(topics: string[]) {
 	const joined = topics.join("、");
+
+	if (topics.some((topic) => ["化城", "疲惫", "休息", "精进", "低谷"].includes(topic))) {
+		return "这组依据讲的是“会休息的精进”：走不动时先停靠、恢复、确认方向，不等于退缩。把遥远目标缩成今天能完成的一小步，休息就会成为继续前行的一部分。";
+	}
+
+	if (topics.some((topic) => ["知足", "少欲", "欲望", "财富", "比较"].includes(topic))) {
+		return "这组依据在分辨“需要”和“非得到不可”：知足不是停止进步，而是不把幸福无限延期。先看清已经拥有的，再决定什么值得继续争取，心就不会一直被匮乏感驱赶。";
+	}
+
+	if (topics.some((topic) => ["焦虑", "内耗", "压力", "恐惧", "心无罣碍", "五蕴皆空"].includes(topic))) {
+		return "这组依据提醒你先观照焦虑，而不是立刻相信焦虑。身体反应、担心和最坏想象都是真实经验，却不是已经发生的结论；把事实与想象分开，心里才会重新出现可行动的空间。";
+	}
+
+	if (topics.some((topic) => ["失眠", "杂念", "禅定", "内不乱", "专注"].includes(topic))) {
+		return "这组依据不是要求脑中一念不生，而是练习念起能觉、不继续追。先减少刺激，把注意力放回呼吸、身体或眼前一件小事，心乱会比强迫自己“必须安静”更容易缓下来。";
+	}
+
+	if (topics.some((topic) => ["嗔恨", "心净", "关系", "直心"].includes(topic))) {
+		return "这组依据先让心不被怒气接管：如实承认不满，也如实看见自己的期待。稳住之后再表达边界、处理关系；忍不是吞下伤害，而是不把决定权交给一时冲动。";
+	}
+
+	if (topics.some((topic) => ["缘起", "中道", "不公平"].includes(topic))) {
+		return "这组依据把问题放回条件：处境不是单一原因造成，也不是永远固定。先分清不可控、可影响和今天能改变的条件，既不把一切怪给自己，也不把自己判成毫无办法。";
+	}
+
+	if (topics.some((topic) => ["自性", "本自具足", "自我价值", "孤独", "空虚"].includes(topic))) {
+		return "这组依据把价值感从外界评价中收回来：你可以希望被看见，但不必等别人认可后才允许自己完整。先停止用比较给自己定价，再诚实面对真正需要的连接与行动。";
+	}
 
 	if (topics.some((topic) => ["应作如是观", "如是观", "如梦幻泡影", "凡所有相", "皆是虚妄", "非相"].includes(topic))) {
 		return `这组依据的重点在“观”：先承认眼前感受很真，但不要急着把它判成最终事实。所谓如梦幻泡影，不是说事情没有发生，而是提醒你别被一时显现拖着走。`;
@@ -407,27 +523,49 @@ export function answerFromKnowledge(question: string, retrievalText = question):
 	const trimmedQuestion = question.trim();
 	const entries = buildKnowledgeEntries();
 
-	const citations = entries
+	const rankedEntries = entries
 		.map((entry) => ({
 			entry,
 			score: scoreText(
 				retrievalText,
-				[entry.originalText, entry.translation, entry.scriptureTitle, entry.sourceKind, entry.author].filter(Boolean).join(" "),
+				[
+					entry.originalText,
+					entry.translation,
+					entry.scriptureTitle,
+					entry.sourceKind,
+					entry.author,
+					...(entry.topics || []),
+					...(entry.keywords || []),
+				]
+					.filter(Boolean)
+					.join(" "),
 				entry.weight
 			),
 		}))
 		.filter((item) => item.score > 0)
-		.sort((a, b) => b.score - a.score || a.entry.position - b.entry.position)
+		.sort((a, b) => b.score - a.score || a.entry.position - b.entry.position);
+
+	const scriptureMatches = rankedEntries.filter((item) => item.entry.sourceKind === "经文原文");
+	const supportingMatches = rankedEntries.filter(
+		(item) => item.entry.sourceKind !== "经文原文" && item.entry.sourceKind !== "经典目录"
+	);
+	const catalogMatches = rankedEntries.filter((item) => item.entry.sourceKind === "经典目录");
+	const selectedEntries = scriptureMatches.length
+		? [...scriptureMatches.slice(0, 4), ...supportingMatches.slice(0, 1)]
+		: [...supportingMatches.slice(0, 4), ...catalogMatches.slice(0, 1)];
+	const citations = selectedEntries
+		.filter((item, index, items) => items.findIndex((candidate) => candidate.entry.id === item.entry.id) === index)
 		.slice(0, 5)
 		.map((item) => buildCitation(item.entry, item.score));
+	const primaryCitation = citations.find((citation) => citation.sourceKind === "经文原文") || citations[0];
 
 	return {
 		answer: buildAnswer(trimmedQuestion, citations),
-		quote: citations[0]
+		quote: primaryCitation
 			? {
-					source: `《${citations[0].scriptureTitle}》第 ${citations[0].position} 段`,
-					text: citations[0].originalText,
-					translation: citations[0].translation,
+					source: `《${primaryCitation.scriptureTitle}》第 ${primaryCitation.position} 段`,
+					text: primaryCitation.originalText,
+					translation: primaryCitation.translation,
 				}
 			: undefined,
 		interpretation: buildInterpretation(trimmedQuestion, citations),

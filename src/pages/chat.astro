@@ -237,8 +237,6 @@ const originSections = [
 			type ThinkingView = {
 				root: HTMLElement;
 				label: HTMLElement;
-				progress: HTMLElement;
-				steps: HTMLElement[];
 			};
 
 			let conversationHistory: StoredTurn[] = [];
@@ -357,21 +355,9 @@ const originSections = [
 			}
 
 			const thinkingSteps = [
-				{
-					title: "理解你的问题",
-					detail: "分清事实、情绪和真正想问的那一层",
-					label: "正在理解你真正关心的事",
-				},
-				{
-					title: "寻找经文依据",
-					detail: "从本地知识库中检索相关经句与主题",
-					label: "正在经文中寻找能够回应此刻的话",
-				},
-				{
-					title: "整理成回答",
-					detail: "对照经义，落回你眼前的具体处境",
-					label: "正在把经义整理成可以用在当下的回答",
-				},
+				"正在理解你真正关心的事",
+				"正在经文中寻找能够回应此刻的话",
+				"正在把经义整理成可以用在当下的回答",
 			];
 
 			function renderThinkingProcess(target: Element | null): ThinkingView | null {
@@ -383,78 +369,38 @@ const originSections = [
 				root.setAttribute("role", "status");
 				root.setAttribute("aria-live", "polite");
 
-				const header = document.createElement("div");
-				header.className = "thinking-header";
-				const seal = document.createElement("span");
-				seal.className = "thinking-seal";
-				seal.setAttribute("aria-hidden", "true");
-				seal.textContent = "观";
-				const headerCopy = document.createElement("div");
-				const eyebrow = document.createElement("span");
-				eyebrow.className = "thinking-eyebrow";
-				eyebrow.textContent = "思考中";
+				const line = document.createElement("div");
+				line.className = "thinking-line";
+				const dots = document.createElement("span");
+				dots.className = "thinking-dots";
+				dots.setAttribute("aria-hidden", "true");
+				for (let index = 0; index < 3; index += 1) dots.append(document.createElement("i"));
 				const label = document.createElement("strong");
 				label.className = "thinking-label";
-				headerCopy.append(eyebrow, label);
-				header.append(seal, headerCopy);
+				line.append(dots, label);
+				const note = document.createElement("p");
+				note.className = "thinking-note";
+				note.textContent = "从经藏中寻找与你此刻处境相应的经句";
 
-				const track = document.createElement("div");
-				track.className = "thinking-track";
-				track.setAttribute("aria-hidden", "true");
-				const progress = document.createElement("span");
-				track.append(progress);
-
-				const list = document.createElement("ol");
-				list.className = "thinking-steps";
-				const steps = thinkingSteps.map((step, index) => {
-					const item = document.createElement("li");
-					item.className = "thinking-step";
-					item.dataset.state = "waiting";
-					const marker = document.createElement("span");
-					marker.className = "thinking-step-marker";
-					marker.setAttribute("aria-hidden", "true");
-					marker.textContent = String(index + 1);
-					const copy = document.createElement("span");
-					const title = document.createElement("strong");
-					title.textContent = step.title;
-					const detail = document.createElement("small");
-					detail.textContent = step.detail;
-					copy.append(title, detail);
-					item.append(marker, copy);
-					list.append(item);
-					return item;
-				});
-
-				root.append(header, track, list);
+				root.append(line, note);
 				target.append(root);
-				const view = { root, label, progress, steps };
+				const view = { root, label };
 				updateThinkingProcess(view, 0);
 				return view;
 			}
 
 			function updateThinkingProcess(view: ThinkingView | null, activeIndex: number) {
 				if (!view) return;
-				view.label.textContent = thinkingSteps[activeIndex]?.label ?? "正在整理回答";
-				view.progress.style.width = `${((activeIndex + 1) / thinkingSteps.length) * 100}%`;
-				view.steps.forEach((step, index) => {
-					step.dataset.state = index < activeIndex ? "done" : index === activeIndex ? "active" : "waiting";
-					const marker = step.querySelector(".thinking-step-marker");
-					if (marker) marker.textContent = index < activeIndex ? "✓" : String(index + 1);
-				});
+				view.label.textContent = thinkingSteps[activeIndex] ?? "正在整理回答";
+				view.root.dataset.stage = String(activeIndex);
 				scrollAnswerToEnd(view.root);
 			}
 
 			async function finishThinkingProcess(view: ThinkingView | null) {
 				if (!view) return;
-				view.steps.forEach((step) => {
-					step.dataset.state = "done";
-					const marker = step.querySelector(".thinking-step-marker");
-					if (marker) marker.textContent = "✓";
-				});
-				view.progress.style.width = "100%";
-				view.label.textContent = "已经找到经文，正在展开回答";
+				view.label.textContent = "已找到相关经文";
 				view.root.classList.add("is-complete");
-				await wait(260);
+				await wait(180);
 			}
 
 			function createConversationTurn(question: string) {
@@ -2008,10 +1954,12 @@ const originSections = [
 	}
 
 	.conversation .thinking-process {
-		display: grid;
-		gap: 14px;
-		min-height: 168px;
-		padding: 4px 0 2px;
+		display: flex;
+		min-height: 74px;
+		flex-direction: column;
+		justify-content: center;
+		gap: 7px;
+		padding: 3px 2px 5px;
 		transition: opacity 220ms ease, transform 220ms ease;
 	}
 
@@ -2020,36 +1968,37 @@ const originSections = [
 		transform: translateY(-4px);
 	}
 
-	.conversation .thinking-header {
+	.conversation .thinking-line {
 		display: flex;
 		align-items: center;
-		gap: 11px;
+		gap: 10px;
 	}
 
-	.conversation .thinking-header > div {
-		display: grid;
-		gap: 2px;
+	.conversation .thinking-dots {
+		display: inline-flex;
+		width: 24px;
+		flex: 0 0 24px;
+		align-items: center;
+		justify-content: center;
+		gap: 3px;
 	}
 
-	.conversation .thinking-seal {
-		display: grid;
-		width: 32px;
-		aspect-ratio: 1;
-		place-items: center;
-		border: 1px solid color-mix(in srgb, var(--ask-accent) 38%, transparent);
+	.conversation .thinking-dots i {
+		display: block;
+		width: 4px;
+		height: 4px;
 		border-radius: 50%;
-		background: var(--ask-soft);
-		color: var(--ask-primary-dark);
-		font-family: var(--ask-ming-font);
-		font-size: 14px;
-		animation: thinking-breathe 1.8s ease-in-out infinite;
+		background: var(--ask-primary);
+		opacity: 0.3;
+		animation: thinking-dot 1.2s ease-in-out infinite;
 	}
 
-	.conversation .thinking-eyebrow {
-		color: var(--ask-primary-dark);
-		font-family: var(--ask-mono-font);
-		font-size: 10px;
-		letter-spacing: 0.16em;
+	.conversation .thinking-dots i:nth-child(2) {
+		animation-delay: 160ms;
+	}
+
+	.conversation .thinking-dots i:nth-child(3) {
+		animation-delay: 320ms;
 	}
 
 	.conversation .thinking-label {
@@ -2058,97 +2007,15 @@ const originSections = [
 		font-size: 14px;
 		font-weight: 500;
 		line-height: 1.45;
+		transition: opacity 180ms ease;
 	}
 
-	.conversation .thinking-track {
-		height: 2px;
-		overflow: hidden;
-		border-radius: 999px;
-		background: var(--ask-line);
-	}
-
-	.conversation .thinking-track span {
-		display: block;
-		width: 0;
-		height: 100%;
-		border-radius: inherit;
-		background: linear-gradient(90deg, var(--ask-primary), color-mix(in srgb, var(--ask-primary) 52%, var(--ask-ink)));
-		transition: width 560ms cubic-bezier(0.22, 1, 0.36, 1);
-	}
-
-	.conversation .thinking-steps {
-		display: grid;
-		grid-template-columns: repeat(3, minmax(0, 1fr));
-		gap: 10px;
+	.conversation .thinking-note {
 		margin: 0;
-		padding: 0;
-		list-style: none;
-	}
-
-	.conversation .thinking-step {
-		display: grid;
-		grid-template-columns: 22px minmax(0, 1fr);
-		gap: 7px;
-		align-items: start;
-		min-width: 0;
-		color: var(--ask-muted);
-		opacity: 0.5;
-		transition: opacity 260ms ease, color 260ms ease, transform 260ms ease;
-	}
-
-	.conversation .thinking-step[data-state="active"] {
-		color: var(--ask-ink);
-		opacity: 1;
-		transform: translateY(-1px);
-	}
-
-	.conversation .thinking-step[data-state="done"] {
-		opacity: 0.76;
-	}
-
-	.conversation .thinking-step-marker {
-		display: grid;
-		width: 20px;
-		aspect-ratio: 1;
-		place-items: center;
-		border: 1px solid var(--ask-line);
-		border-radius: 50%;
-		font-family: var(--ask-mono-font);
-		font-size: 10px;
-		line-height: 1;
-		transition: background-color 260ms ease, border-color 260ms ease, color 260ms ease;
-	}
-
-	.conversation .thinking-step[data-state="active"] .thinking-step-marker {
-		border-color: var(--ask-accent);
-		background: var(--ask-soft);
-		color: var(--ask-primary-dark);
-		box-shadow: 0 0 0 4px color-mix(in srgb, var(--ask-soft) 72%, transparent);
-	}
-
-	.conversation .thinking-step[data-state="done"] .thinking-step-marker {
-		border-color: color-mix(in srgb, var(--ask-primary) 46%, transparent);
-		background: var(--ask-primary);
-		color: var(--ask-invert-ink);
-	}
-
-	.conversation .thinking-step > span:last-child {
-		display: grid;
-		gap: 2px;
-		min-width: 0;
-	}
-
-	.conversation .thinking-step strong {
-		font-family: var(--ask-kai-font);
-		font-size: 12px;
-		font-weight: 500;
-		line-height: 1.4;
-	}
-
-	.conversation .thinking-step small {
+		padding-left: 34px;
 		color: var(--ask-muted);
 		font-family: ui-sans-serif, system-ui, sans-serif;
-		font-size: 10px;
+		font-size: 11px;
 		line-height: 1.45;
 	}
 
@@ -2164,13 +2031,13 @@ const originSections = [
 		animation-delay: 120ms;
 	}
 
-	@keyframes thinking-breathe {
-		0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--ask-soft) 82%, transparent); }
-		50% { box-shadow: 0 0 0 7px transparent; }
+	@keyframes thinking-dot {
+		0%, 60%, 100% { opacity: 0.28; transform: translateY(0); }
+		30% { opacity: 0.88; transform: translateY(-2px); }
 	}
 
 	@keyframes answer-reveal {
-		from { opacity: 0; transform: translateY(8px); }
+		from { opacity: 0; transform: translateY(5px); }
 		to { opacity: 1; transform: translateY(0); }
 	}
 
@@ -2269,23 +2136,15 @@ const originSections = [
 			display: none;
 		}
 
-		.conversation .thinking-steps {
-			grid-template-columns: 1fr;
-			gap: 8px;
-		}
-
-		.conversation .thinking-step small {
-			display: none;
-		}
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		.conversation .thinking-seal,
+		.conversation .thinking-dots i,
 		.conversation .answer-card.is-revealing > * {
 			animation: none;
 		}
 
-		.conversation .thinking-track span,
+		.conversation .thinking-label,
 		.conversation .thinking-process {
 			transition: none;
 		}

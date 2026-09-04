@@ -8,43 +8,9 @@ const sampleQuestions = [
 	"因果和放下矛盾吗？",
 ];
 
-const originCodeLines = [
-	"git init yingzuo-rushi",
-	"echo \"把问题先放到桌面上\" >> README.md",
-	"echo \"从经典里找一句能照见当下的话\" >> README.md",
-	"echo \"不急着证明，只回到下一步\" >> README.md",
-];
-
-const originSections = [
-	{
-		title: "先从一个具体问题开始",
-		paragraphs: [
-			"我是文韬，长期和产品、界面、图像、文字打交道，也长期用阅读记录自己的变化。做「应作如是」，不是想把佛法做成一个标准答案机器，而是想留一个安静的工作台：当一个问题把人卡住，先把问题说清楚，再从经文里找一束光，最后回到今天能做的事。",
-			"对我来说，读《金刚经》不是逃离现实，而是让现实少一点把人拖走。工作、关系、情绪、成败都还在，只是心不必每一次都被它们拽着跑。",
-		],
-	},
-	{
-		title: "设计不是装饰，是降低靠近的门槛",
-		paragraphs: [
-			"很多时候，人不是缺道理，而是缺一个能让自己停下来、看清楚的入口。古文、注释、白话、问答，如果排得太重，就会把原本想靠近的人挡在外面。",
-			"所以这个工具会尽量克制：少一点说教，少一点神秘感，少一点「我来告诉你答案」。把经文、解释和你的问题放在一个干净界面里，让你自己慢慢看见。",
-		],
-	},
-	{
-		title: "AI 只是把散落的东西重新排好",
-		paragraphs: [
-			"AI 在这里不是老师，也不是判官。它做的事很朴素：从本地知识库里找相关经文和解释，把散开的材料整理成一段可以读下去的话。",
-			"真正重要的不是它说得多漂亮，而是这段话能不能帮你少一点反应、多一点判断。能不能让你从「我怎么会这样」往后退一步，问出更有效的「下一步是什么」。",
-		],
-	},
-	{
-		title: "愿它有一点实际用处",
-		paragraphs: [
-			"我希望「应作如是」保留一点手作感：像一张读书卡片，也像一次深夜里的自问自答。它不替你决定人生，也不替你证明谁对谁错。",
-			"如果它能在某个很乱的时刻，让你把心放稳一点，把事情看清一点，把行动往前推一点，就够了。经典不必只在书页里，它也可以落在今天的一个小选择里。",
-		],
-	},
-];
+const zenHallUrl = import.meta.env.DEV
+	? "http://localhost:3000/zen?models=separate"
+	: "https://yinian-sign.ufp818001.chatgpt.site/zen?models=separate";
 ---
 
 <html lang="zh-CN">
@@ -92,7 +58,7 @@ const originSections = [
 				</a>
 
 				<nav class="nav-tabs" aria-label="模块导航">
-					<button class="nav-item active" type="button" aria-current="page" data-view-target="chat">
+					<button class="nav-item active" type="button" aria-current="page">
 						<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6.5A3.5 3.5 0 0 1 8.5 3h7A3.5 3.5 0 0 1 19 6.5v4a3.5 3.5 0 0 1-3.5 3.5H11l-5 4v-4.2A3.5 3.5 0 0 1 5 11.5Z" /></svg>
 						<span>如是我问</span>
 					</button>
@@ -100,10 +66,10 @@ const originSections = [
 						<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
 						<span>随缘读经</span>
 					</button>
-					<button class="nav-item" type="button" data-view-target="origin">
+					<a class="nav-item" href={zenHallUrl} aria-label="进入心禅堂">
 						<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M8 7h8M7 11h10M9 15h6" /></svg>
-						<span>缘起</span>
-					</button>
+						<span>心禅堂</span>
+					</a>
 				</nav>
 
 				<div class="toolbar" aria-label="页面工具">
@@ -167,31 +133,6 @@ const originSections = [
 				</section>
 			</main>
 
-			<section class="origin-shell app-view" data-view-panel="origin" hidden aria-labelledby="origin-title">
-				<div class="origin-hero">
-					<div class="origin-mark" aria-hidden="true">
-						<svg viewBox="0 0 24 24"><path d="M12 20V9M8 13c-3 0-5-2-5-5 3 0 5 2 5 5Zm8 0c3 0 5-2 5-5-3 0-5 2-5 5ZM8 13h8M12 9c0-3 2-5 5-5 0 3-2 5-5 5Z" /></svg>
-					</div>
-					<p class="origin-eyebrow">ORIGIN</p>
-					<h1 id="origin-title">缘起</h1>
-					<p>把读经、设计和日常困惑放在同一张桌上，慢慢问，也慢慢照见自己。</p>
-				</div>
-
-				<div class="origin-divider" aria-hidden="true"></div>
-
-				<pre class="origin-code" aria-label="项目缘起代码片段"><code>{originCodeLines.join("\n")}</code></pre>
-
-				<article class="origin-article">
-					{originSections.map((section) => (
-						<section class="origin-section">
-							<h2>{section.title}</h2>
-							{section.paragraphs.map((paragraph) => (
-								<p>{paragraph}</p>
-							))}
-						</section>
-					))}
-				</article>
-			</section>
 		</div>
 
 		<script>
@@ -206,8 +147,6 @@ const originSections = [
 			const questionButtons = page?.querySelectorAll("[data-question]");
 			const sendButton = page?.querySelector(".send-button");
 			const themeButton = page?.querySelector("[data-theme-toggle]");
-			const viewButtons = page?.querySelectorAll("[data-view-target]");
-			const viewPanels = page?.querySelectorAll("[data-view-panel]");
 			let activeAnswerCard: Element | null = null;
 			const storageKey = "yingzuo-chat-session";
 			const themeStorageKey = "yingzuo-chat-theme";
@@ -579,31 +518,6 @@ const originSections = [
 				animateThemeSwitch(nextTheme);
 			});
 
-			function setView(viewName: string) {
-				viewPanels?.forEach((panel) => {
-					if (!(panel instanceof HTMLElement)) return;
-					panel.hidden = panel.getAttribute("data-view-panel") !== viewName;
-				});
-				viewButtons?.forEach((button) => {
-					if (!(button instanceof HTMLElement)) return;
-					const isActive = button.getAttribute("data-view-target") === viewName;
-					button.classList.toggle("active", isActive);
-					if (isActive) {
-						button.setAttribute("aria-current", "page");
-					} else {
-						button.removeAttribute("aria-current");
-					}
-				});
-			}
-
-			viewButtons?.forEach((button) => {
-				button.addEventListener("click", () => {
-					const viewName = button.getAttribute("data-view-target");
-					if (!viewName) return;
-					setView(viewName);
-				});
-			});
-
 			questionButtons?.forEach((button) => {
 				button.addEventListener("click", () => {
 					if (!(input instanceof HTMLTextAreaElement)) return;
@@ -798,12 +712,7 @@ const originSections = [
 	.composer::after,
 	.quick-questions button,
 	.composer textarea,
-	.disclaimer,
-	.origin-mark,
-	.origin-code,
-	.origin-section,
-	.origin-section h2,
-	.origin-section p {
+	.disclaimer {
 		transition:
 			background-color var(--theme-duration) var(--theme-ease),
 			background var(--theme-duration) var(--theme-ease),

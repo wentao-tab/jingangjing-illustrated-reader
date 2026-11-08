@@ -86,6 +86,8 @@ PUBLIC_BASE_PATH=/jingangjing-illustrated-reader/ npm run build
 
 MIT
 
+「应作如是」经卷画廊的 [CBETA 原文数据](./src/data/gallery-texts.json) 另按 [CBETA 使用说明](https://cbeta.org/copyright.php) 和 [CC BY-NC-SA 3.0 TW](https://creativecommons.org/licenses/by-nc-sa/3.0/tw/) 分发。经卷页附各经的版本日期和源文件链接，数据中保留 TEI 原始头部。可用 `python3 scripts/import-gallery-texts.py` 从固定版本重新导入。
+
 ---
 
 ## English

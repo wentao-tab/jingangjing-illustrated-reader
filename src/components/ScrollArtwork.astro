@@ -1,0 +1,470 @@
+---
+import type { scrolls } from "../data/gallery";
+
+interface Props {
+	scroll: typeof scrolls[number];
+}
+
+const { scroll } = Astro.props;
+const designs: Record<string, { title: string[]; caption: string; mark?: string; notes?: string[] }> = {
+	"heart-sutra": { title: ["般若波罗蜜多心经"], caption: "照见五蕴 · 度一切苦厄", mark: "空" },
+	"diamond-sutra": { title: ["金刚", "般若"], caption: "一切有为法\n如梦幻泡影\n如露亦如电\n应作如是观" },
+	"lotus-sutra": { title: ["妙法莲华经"], caption: "一乘之门" },
+	"avatamsaka-sutra": { title: ["大方广佛", "华严经"], caption: "重重相映 · 法界无尽" },
+	"contemplation-sutra": { title: ["观无量寿佛经"], caption: "十六观 · 自落日起" },
+	"vimalakirti-sutra": { title: ["维摩诘"], caption: "一室之内 · 不二之门", mark: "不二" },
+	"ksitigarbha-sutra": { title: ["地藏本愿"], caption: "于幽暗处发长远之愿", mark: "地藏" },
+	"medicine-buddha-sutra": { title: ["药师经"], caption: "琉璃世界 · 十二大愿" },
+	"amitabha-sutra": { title: ["佛说", "阿弥陀经"], caption: "姚秦三藏法师鸠摩罗什译" },
+	"platform-sutra": { title: ["不识一字", "识得自心"], caption: "六祖坛经 · 禅门见性", notes: ["行由", "般若", "定慧", "顿渐"] },
+	"42-sutra": { title: ["四十二章", "经"], caption: "次第修学 · 四十二则短章", mark: "42" },
+	"breakthrough-sermon": { title: ["达磨大师破相论"], caption: "問：若欲修道，從何入手？", mark: "覺" },
+};
+const design = designs[scroll.slug];
+const petals = Array.from({ length: 12 }, (_, i) => i * 30);
+---
+
+<div class="artwork" aria-hidden="true">
+	<div class:list={["art", `art-${scroll.slug}`]}>
+		<div class="art-grain"></div>
+		{design.mark && <div class="art-mark">{design.mark}</div>}
+		{scroll.slug === "lotus-sutra" && (
+			<svg class="lotus-mandala" viewBox="0 0 300 300" focusable="false">
+				<circle cx="150" cy="150" r="145" />
+				<circle cx="150" cy="150" r="100" />
+				{petals.map((angle) => (
+					<path d="M150 150C115 116 116 77 150 19C184 77 185 116 150 150Z" transform={`rotate(${angle} 150 150)`} />
+				))}
+			</svg>
+		)}
+		{scroll.slug === "diamond-sutra" && <div class="diamond-figure"></div>}
+		{scroll.slug === "avatamsaka-sutra" && <div class="jeweled-grid"></div>}
+		{scroll.slug === "contemplation-sutra" && <div class="setting-sun"></div>}
+		{scroll.slug === "vimalakirti-sutra" && <blockquote class="screen-quote">{scroll.quote}</blockquote>}
+		{design.notes && <ul class="art-notes">{design.notes.map((note) => <li>{note}</li>)}</ul>}
+		<div class="art-content">
+			<p class="art-label">应作如是 <span>／</span> 经卷</p>
+			<p class="art-title">{design.title.map((line) => <span>{line}</span>)}</p>
+			<p class="art-caption">{design.caption}</p>
+			<p class="art-meta">{scroll.code} <span>·</span> {scroll.size}</p>
+		</div>
+		<span class="art-signature">应作如是</span>
+	</div>
+</div>
+
+<style>
+	.artwork {
+		container-type: inline-size;
+	}
+
+	.art {
+		position: relative;
+		isolation: isolate;
+		overflow: hidden;
+		aspect-ratio: 12 / 7;
+		background: var(--art-bg);
+		color: var(--art-ink);
+		font-family: var(--scroll-serif);
+	}
+
+	.art-grain {
+		position: absolute;
+		z-index: -1;
+		inset: 0;
+		opacity: 0.37;
+		background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.87' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' opacity='.17' filter='url(%23n)'/%3E%3C/svg%3E");
+		mix-blend-mode: multiply;
+	}
+
+	.art-content {
+		position: absolute;
+		inset: 13% 7% auto;
+	}
+
+	.art p {
+		margin: 0;
+	}
+
+	.art-label,
+	.art-meta,
+	.art-signature {
+		font-family: ui-sans-serif, system-ui, sans-serif;
+		font-size: 1.05cqw;
+		letter-spacing: 0.18em;
+	}
+
+	.art-label {
+		color: var(--art-accent);
+	}
+
+	.art-label span,
+	.art-meta span {
+		padding-inline: 0.45em;
+	}
+
+	.art-title {
+		padding-top: 2.6cqw;
+		font-size: 9.2cqw;
+		line-height: 1.02;
+		letter-spacing: -0.05em;
+	}
+
+	.art-title span {
+		display: block;
+	}
+
+	.art-caption {
+		padding-top: 3.4cqw;
+		font-size: 2.1cqw;
+		line-height: 1.55;
+		letter-spacing: 0.1em;
+		white-space: pre-line;
+	}
+
+	.art-meta {
+		padding-top: 1.5cqw;
+		opacity: 0.7;
+	}
+
+	.art-signature {
+		position: absolute;
+		right: 4.5%;
+		bottom: 5%;
+		opacity: 0.56;
+	}
+
+	.art-mark {
+		position: absolute;
+		z-index: -1;
+		pointer-events: none;
+		font-size: 48cqw;
+		line-height: 1;
+	}
+
+	.art-heart-sutra {
+		--art-bg: radial-gradient(ellipse at 47% 48%, #d8d8d0 0, #ecece7 47%, #f2f1eb 85%);
+		--art-ink: #171712;
+		--art-accent: #9a2921;
+	}
+
+	.art-heart-sutra .art-content {
+		inset: 18% 5% auto;
+	}
+
+	.art-heart-sutra .art-title {
+		font-family: var(--scroll-brush);
+		font-size: 9.25cqw;
+		letter-spacing: -0.07em;
+	}
+
+	.art-heart-sutra .art-caption::before,
+	.art-medicine-buddha-sutra .art-caption::before {
+		display: block;
+		width: 10cqw;
+		height: 0.55cqw;
+		margin-bottom: 2.4cqw;
+		background: var(--art-accent);
+		content: "";
+	}
+
+	.art-heart-sutra .art-mark {
+		right: 24%;
+		bottom: -6%;
+		color: #7b7770;
+		font-family: var(--scroll-brush);
+		opacity: 0.045;
+	}
+
+	.art-diamond-sutra {
+		--art-bg: radial-gradient(ellipse at 50% 54%, #38322a, #141413 57%, #0c0c0c);
+		--art-ink: #e6d4ae;
+		--art-accent: #d4ad76;
+		text-align: center;
+	}
+
+	.art-diamond-sutra .art-content {
+		inset: 6% 8% auto;
+	}
+
+	.art-diamond-sutra .art-title {
+		padding-top: 1.4cqw;
+		font-size: 11.4cqw;
+	}
+
+	.art-diamond-sutra .art-caption {
+		padding-top: 4.3cqw;
+		font-size: 2.2cqw;
+	}
+
+	.diamond-figure {
+		position: absolute;
+		inset: 20% auto auto 50%;
+		width: 32%;
+		aspect-ratio: 1;
+		border: 1px solid rgb(230 212 174 / 0.1);
+		transform: translateX(-50%) rotate(45deg);
+	}
+
+	.art-lotus-sutra {
+		--art-bg: radial-gradient(ellipse at 80% 57%, #303b48, #122335 55%, #101c29);
+		--art-ink: #dcc080;
+		--art-accent: #dbc07c;
+	}
+
+	.art-lotus-sutra .art-content {
+		inset: 8% 6% auto;
+	}
+
+	.art-lotus-sutra .art-title {
+		writing-mode: vertical-rl;
+		font-size: 6.8cqw;
+		letter-spacing: 0.03em;
+	}
+
+	.lotus-mandala {
+		position: absolute;
+		right: -13%;
+		top: -5%;
+		width: 66%;
+		height: auto;
+		fill: none;
+		stroke: var(--art-ink);
+		stroke-width: 0.5;
+		opacity: 0.4;
+	}
+
+	.art-avatamsaka-sutra {
+		--art-bg: linear-gradient(115deg, #f0f6f5, #e3edef);
+		--art-ink: #182b33;
+		--art-accent: #785634;
+	}
+
+	.art-avatamsaka-sutra .art-title {
+		font-family: var(--scroll-brush);
+		font-size: 9.7cqw;
+	}
+
+	.jeweled-grid {
+		position: absolute;
+		inset: 0 0 0 44%;
+		z-index: -1;
+		background:
+			radial-gradient(circle at 36% 28%, #7ba8bb 0 0.5cqw, transparent 0.65cqw),
+			radial-gradient(circle at 70% 64%, #608da2 0 0.47cqw, transparent 0.65cqw),
+			radial-gradient(circle at 64% 13%, #b95743 0 0.48cqw, transparent 0.65cqw),
+			repeating-linear-gradient(0deg, #5e92a42c 0 1px, transparent 1px 6cqw),
+			repeating-linear-gradient(90deg, #5e92a42c 0 1px, transparent 1px 6cqw);
+		mask-image: linear-gradient(90deg, transparent, black 30%);
+	}
+
+	.art-contemplation-sutra {
+		--art-bg: radial-gradient(ellipse at 50% 29%, #653c39, #2c2030 35%, #191223 72%);
+		--art-ink: #f2e1cc;
+		--art-accent: #e0a77c;
+		text-align: center;
+	}
+
+	.art-contemplation-sutra .art-content {
+		inset: 18% 7% auto;
+	}
+
+	.art-contemplation-sutra .art-title {
+		font: 6.4cqw/1.16 var(--scroll-brush);
+	}
+
+	.art-contemplation-sutra .art-meta {
+		padding-top: 8cqw;
+	}
+
+	.setting-sun {
+		position: absolute;
+		top: 15%;
+		left: 43%;
+		width: 14%;
+		aspect-ratio: 1;
+		border-radius: 50%;
+		background: #e7a56e;
+		filter: blur(5.5cqw);
+		opacity: 0.37;
+	}
+
+	.art-vimalakirti-sutra {
+		--art-bg: linear-gradient(150deg, #f6f2e9, #e9e2d2);
+		--art-ink: #201a14;
+		--art-accent: #906c3c;
+	}
+
+	.art-vimalakirti-sutra .art-content {
+		inset: 24% 6% auto;
+	}
+
+	.art-vimalakirti-sutra .art-title {
+		font-size: 14cqw;
+	}
+
+	.art-vimalakirti-sutra .art-mark {
+		top: 41%;
+		left: 18%;
+		color: #c4a467;
+		font: 17cqw/1 var(--scroll-brush);
+		opacity: 0.44;
+	}
+
+	.screen-quote {
+		position: absolute;
+		right: 6%;
+		bottom: 14%;
+		width: 40%;
+		margin: 0;
+		padding: 4cqw;
+		border: 1px solid #b79a63;
+		background: #22201b;
+		color: #f3e6cb;
+		box-shadow: 1.4cqw 1.3cqw #ccb88c;
+		font-size: 2.5cqw;
+		line-height: 1.65;
+	}
+
+	.art-ksitigarbha-sutra {
+		--art-bg: radial-gradient(ellipse at 14% 17%, #26150e, #100c0b 48%, #090909 82%);
+		--art-ink: #ece5da;
+		--art-accent: #d96e55;
+		text-align: center;
+	}
+
+	.art-ksitigarbha-sutra .art-content {
+		inset: 19% 5% auto;
+	}
+
+	.art-ksitigarbha-sutra .art-title {
+		padding-top: 3.5cqw;
+		font-size: 13.2cqw;
+	}
+
+	.art-ksitigarbha-sutra .art-caption {
+		padding-top: 7cqw;
+	}
+
+	.art-ksitigarbha-sutra .art-mark {
+		left: -8%;
+		bottom: 7%;
+		font-size: 41cqw;
+		opacity: 0.1;
+	}
+
+	.art-medicine-buddha-sutra {
+		--art-bg: linear-gradient(130deg, #152744, #1b2c4b);
+		--art-ink: #e5eaf4;
+		--art-accent: #95abc9;
+	}
+
+	.art-medicine-buddha-sutra .art-content {
+		inset: 12% 5% auto;
+	}
+
+	.art-medicine-buddha-sutra .art-title {
+		padding-top: 5.8cqw;
+		font-size: 12.6cqw;
+	}
+
+	.art-amitabha-sutra {
+		--art-bg: #f1eee4;
+		--art-ink: #36261d;
+		--art-accent: #83543d;
+		text-align: center;
+		background-image:
+			repeating-linear-gradient(0deg, #35281c10 0 1px, transparent 1px 4.4cqw),
+			repeating-linear-gradient(90deg, #35281c10 0 1px, transparent 1px 4.4cqw);
+		box-shadow: inset 0 -0.65cqw #493325;
+	}
+
+	.art-amitabha-sutra .art-title {
+		font: 10.5cqw/0.98 var(--scroll-brush);
+	}
+
+	.art-amitabha-sutra .art-caption {
+		padding-top: 5.8cqw;
+	}
+
+	.art-platform-sutra {
+		--art-bg: radial-gradient(ellipse at 8% 5%, #312417, #201a15 75%);
+		--art-ink: #e9dac0;
+		--art-accent: #d6ad73;
+	}
+
+	.art-platform-sutra .art-content {
+		inset: 13% 5% auto;
+	}
+
+	.art-platform-sutra .art-title {
+		font-family: system-ui, sans-serif;
+		font-size: 9.5cqw;
+		font-weight: 650;
+	}
+
+	.art-notes {
+		position: absolute;
+		inset: 27% 6% auto auto;
+		width: 36%;
+		margin: 0;
+		padding: 0;
+		color: var(--art-accent);
+		list-style: none;
+	}
+
+	.art-notes li {
+		margin-bottom: 1.2cqw;
+		padding: 1.65cqw 2cqw;
+		border: 1px solid #d6ad734d;
+		font-size: 1.7cqw;
+	}
+
+	.art-42-sutra {
+		--art-bg: #0b0b0b;
+		--art-ink: #f5f1e6;
+		--art-accent: #d3d262;
+		text-align: center;
+	}
+
+	.art-42-sutra .art-title {
+		font: 15cqw/1 var(--scroll-brush);
+	}
+
+	.art-42-sutra .art-title span + span {
+		font-size: 7cqw;
+	}
+
+	.art-42-sutra .art-mark {
+		right: -3%;
+		bottom: -21%;
+		font: 45cqw/1 var(--scroll-brush);
+		opacity: 0.15;
+	}
+
+	.art-breakthrough-sermon {
+		--art-bg: radial-gradient(ellipse at 67% 70%, #181715, #080808 65%);
+		--art-ink: #cb4d41;
+		--art-accent: #dba99a;
+	}
+
+	.art-breakthrough-sermon .art-content {
+		inset: 20% 6% auto;
+	}
+
+	.art-breakthrough-sermon .art-title {
+		font: 10cqw/1.1 var(--scroll-brush);
+	}
+
+	.art-breakthrough-sermon .art-caption,
+	.art-breakthrough-sermon .art-meta {
+		color: #dfd9ce;
+	}
+
+	.art-breakthrough-sermon .art-mark {
+		left: 23%;
+		top: -18%;
+		color: #f4f0e6;
+		font-family: var(--scroll-brush);
+		opacity: 0.07;
+	}
+</style>

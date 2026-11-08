@@ -188,12 +188,10 @@ const zenHallUrl = import.meta.env.DEV
 
 			const moduleLinks = page?.querySelectorAll("[data-module-link]");
 			const modulePanels = page?.querySelectorAll<HTMLElement>("[data-view-panel]");
+			const draftKey = "yingzuo-chat-draft";
 
 			function syncModule() {
 				const activeModule = location.hash === "#gallery" ? "gallery" : "chat";
-				if (activeModule === "chat") {
-					page?.querySelector<HTMLDialogElement>('[data-view-panel="gallery"] dialog[open]')?.close();
-				}
 				page?.classList.toggle("gallery-active", activeModule === "gallery");
 				modulePanels?.forEach((panel) => {
 					panel.hidden = panel.dataset.viewPanel !== activeModule;
@@ -208,6 +206,21 @@ const zenHallUrl = import.meta.env.DEV
 
 			syncModule();
 			window.addEventListener("hashchange", syncModule);
+
+			if (input instanceof HTMLTextAreaElement) {
+				try {
+					input.value = sessionStorage.getItem(draftKey) ?? input.value;
+				} catch {
+					// The embedded reader can run with storage disabled.
+				}
+				window.addEventListener("pagehide", () => {
+					try {
+						sessionStorage.setItem(draftKey, input.value);
+					} catch {
+						// Keep navigation available when storage is disabled.
+					}
+				});
+			}
 
 			function appendParagraph(container: Element, text: string) {
 				const paragraph = document.createElement("p");

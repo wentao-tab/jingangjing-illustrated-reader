@@ -1,0 +1,508 @@
+---
+import MainHead from "../../../components/MainHead.astro";
+import ScrollArtwork from "../../../components/ScrollArtwork.astro";
+import { scrolls } from "../../../data/gallery";
+import { guides } from "../../../data/gallery-guides";
+import texts from "../../../data/gallery-texts.json";
+import { withBase } from "../../../utils/paths";
+
+export function getStaticPaths() {
+	return scrolls.map((scroll) => ({ params: { slug: scroll.slug }, props: { scroll } }));
+}
+
+const { scroll } = Astro.props;
+const text = texts[scroll.code as keyof typeof texts];
+const guide = guides[scroll.code];
+const scrollIndex = scrolls.indexOf(scroll);
+const previous = scrolls[scrollIndex - 1];
+const next = scrolls[scrollIndex + 1];
+const galleryUrl = withBase("/chat/#gallery");
+const title = `${scroll.title} · 经卷画廊 · 应作如是`;
+const editionDate = text.date.split(" ")[0];
+const readerTheme = `--paper: ${scroll.paper}; --shade: ${scroll.shade}; --ink: ${scroll.ink}; --accent: ${scroll.accent}`;
+const hasPreface = scroll.code === "T0251" || scroll.code === "T0365";
+const textEntry = hasPreface ? `#section-1-${text.volumes[0].chapters.length}` : "#text";
+const canonUrl = `https://cbetaonline.dila.edu.tw/zh/${scroll.code}`;
+const volumeLabel = (number: number) => `第 ${number} 卷`;
+const chapterId = (volume: number, index: number) => `section-${volume}-${index + 1}`;
+---
+
+<html lang="zh-CN">
+	<head>
+		<MainHead title={title} description={scroll.intro} keywords={`${scroll.title},佛经,经卷画廊,原文`} favicon={withBase("/assets/brand/favicon.png")} />
+		<link rel="stylesheet" href="https://registry.npmmirror.com/lxgw-wenkai-screen-web/1.521.0/files/lxgwwenkaiscreen/result.css" />
+		<link rel="stylesheet" href="https://unpkg.com/@chinese-fonts/hwmct@3.0.0/dist/%E6%B1%87%E6%96%87%E6%98%8E%E6%9C%9D%E4%BD%93/result.css" />
+	</head>
+	<body style={readerTheme}>
+		<header class="reader-header">
+			<nav aria-label="经卷导航">
+				<a class="back" href={galleryUrl}>← <span>经卷画廊</span></a>
+				<span class="reader-current">{scroll.title}</span>
+				<div class="reader-actions">
+					<a href="#guide">导读</a>
+					<a href={textEntry}>原文</a>
+				</div>
+			</nav>
+		</header>
+
+		<main>
+			<section class="hero" aria-labelledby="book-title">
+				<h1 class="visually-hidden" id="book-title">{scroll.title}</h1>
+				<ScrollArtwork scroll={scroll} />
+				<div class="hero-bar">
+					<span>{scroll.code} · {scroll.size} · <span lang="zh-Hant">{text.author}</span></span>
+					<a href="#guide">向下开卷 ↓</a>
+				</div>
+			</section>
+
+			<section class="guide" id="guide" aria-labelledby="guide-title">
+				<p class="section-label"><span>01</span> 经卷导读</p>
+				<h2 id="guide-title">{scroll.theme}</h2>
+				<p class="guide-intro">{scroll.intro}</p>
+				<blockquote lang="zh-Hant">{scroll.quote}</blockquote>
+				<ol class="guide-points">
+					{guide.map(([heading, body], index) => (
+						<li>
+							<span class="guide-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+							<div><h3>{heading}</h3><p>{body}</p></div>
+						</li>
+					))}
+				</ol>
+				<div class="guide-actions">
+					<a class="primary-link" href={textEntry}>开始读原文 ↓</a>
+					{scroll.code === "T0235" && <a href={withBase("/")}>阅读配图版 ↗</a>}
+				</div>
+			</section>
+
+			<section class="reading" id="text" aria-labelledby="text-title">
+				<header>
+					<p class="section-label"><span>02</span> 经卷原文</p>
+					<h2 id="text-title">{scroll.title}</h2>
+					<p class="edition-note"><span lang="zh-Hant">{text.author}</span> · {scroll.size} · CBETA {scroll.code}</p>
+				</header>
+				<details class="reader-index" id="catalog">
+					<summary>卷目目录 <span>{text.volumes.length} 卷</span></summary>
+					<ol class="volume-list">
+						{text.volumes.map((volume) => (
+							<li>
+								<a href={`#volume-${volume.number}`}>{volumeLabel(volume.number)}</a>
+								{volume.chapters.length > 1 && (
+									<ul>
+										{volume.chapters.map((chapter, i) => (
+											<li><a href={`#${chapterId(volume.number, i)}`} lang="zh-Hant">{chapter.title || "續文"}</a></li>
+										))}
+									</ul>
+								)}
+							</li>
+						))}
+					</ol>
+				</details>
+				<div class="sutra-text" lang="zh-Hant">
+					{text.volumes.map((volume) => (
+						<section class="volume" id={`volume-${volume.number}`} aria-label={volumeLabel(volume.number)}>
+							{text.volumes.length > 1 && (
+								<header class="volume-heading">
+									<h3>{volumeLabel(volume.number)}</h3>
+									<a href="#catalog">返回目录 ↑</a>
+								</header>
+							)}
+							{volume.chapters.map((chapter, i) => (
+								<section class="chapter" id={chapterId(volume.number, i)}>
+									{chapter.title && (
+										text.volumes.length > 1
+											? <h4>{chapter.title}</h4>
+											: <h3>{chapter.title}</h3>
+									)}
+									{chapter.blocks.map(([kind, paragraph]) => (
+										<p class:list={{ verse: kind === "verse", byline: kind === "byline" }}>{paragraph}</p>
+									))}
+								</section>
+							))}
+						</section>
+					))}
+				</div>
+				<footer class="edition-credit">
+					<p>原文由财团法人佛教电子佛典基金会（CBETA）电子版转排，版本 {text.edition}（{editionDate}）。校勘注与缺字资料可在来源版本查阅。</p>
+					<p>
+						<a href={canonUrl}>CBETA 原版</a>
+						<a href={text.sourceUrl}>版本资料（TEI XML）</a>
+						<a href="https://cbeta.org/copyright.php">CBETA 使用说明</a>
+						<a href="https://creativecommons.org/licenses/by-nc-sa/3.0/tw/">CC BY-NC-SA 3.0 TW</a>
+					</p>
+				</footer>
+			</section>
+		</main>
+
+		<footer class="reader-footer">
+			<nav aria-label="相邻经卷">
+				{previous && <a href={withBase(`/chat/gallery/${previous.slug}/`)}><span>← 上一卷</span>{previous.title}</a>}
+				<a class="gallery-return" href={galleryUrl}>返回经卷画廊</a>
+				{next && <a href={withBase(`/chat/gallery/${next.slug}/`)}><span>下一卷 →</span>{next.title}</a>}
+			</nav>
+		</footer>
+	</body>
+</html>
+
+<style>
+	:root {
+		--scroll-serif: "Huiwen-mincho", "Songti SC", "Noto Serif SC", "SimSun", serif;
+		--scroll-brush: "LXGW WenKai Screen", "Kaiti SC", "STKaiti", "KaiTi", var(--scroll-serif);
+	}
+
+	* {
+		box-sizing: border-box;
+	}
+
+	body {
+		margin: 0;
+		background: var(--paper);
+		color: var(--ink);
+		font: 17px/1.65 var(--scroll-serif);
+		-webkit-font-smoothing: antialiased;
+	}
+
+	a {
+		color: inherit;
+		text-underline-offset: 0.25em;
+	}
+
+	:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 4px;
+	}
+
+	:target {
+		scroll-margin-top: 80px;
+	}
+
+	.reader-header {
+		position: sticky;
+		z-index: 2;
+		top: 0;
+		border-bottom: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+		background: color-mix(in srgb, var(--paper) 94%, transparent);
+		backdrop-filter: blur(12px);
+	}
+
+	.reader-header nav {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+		max-width: 1160px;
+		margin: 0 auto;
+		padding: 6px clamp(14px, 4vw, 32px);
+		font: 15px var(--scroll-brush);
+	}
+
+	.reader-header a {
+		display: inline-flex;
+		align-items: center;
+		gap: 7px;
+		min-height: 44px;
+		color: var(--accent);
+		text-decoration: none;
+		white-space: nowrap;
+	}
+
+	.reader-header a:hover {
+		text-decoration: underline;
+	}
+
+	.reader-current {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.reader-actions {
+		display: flex;
+		gap: clamp(14px, 3vw, 24px);
+	}
+
+	.hero {
+		max-width: 1080px;
+		margin: clamp(16px, 4vw, 52px) auto 0;
+		padding: 0 clamp(12px, 3vw, 26px);
+	}
+
+	.hero > :global(.artwork) {
+		overflow: hidden;
+		border: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+		border-radius: 10px;
+	}
+
+	.hero-bar {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		gap: 4px 16px;
+		padding-top: 10px;
+		font: 14px/1.5 var(--scroll-brush);
+	}
+
+	.hero-bar a {
+		display: inline-flex;
+		align-items: center;
+		min-height: 44px;
+		color: var(--accent);
+	}
+
+	.guide,
+	.reading {
+		width: min(750px, calc(100% - 36px));
+		margin: clamp(64px, 10vw, 124px) auto 0;
+	}
+
+	.section-label {
+		margin: 0 0 14px;
+		color: var(--accent);
+		font: 14px var(--scroll-brush);
+		letter-spacing: 0.18em;
+	}
+
+	.section-label span {
+		margin-right: 8px;
+		font-variant-numeric: tabular-nums;
+	}
+
+	h2 {
+		margin: 0;
+		font-size: clamp(32px, 5.2vw, 57px);
+		font-weight: 400;
+		line-height: 1.25;
+		text-wrap: balance;
+	}
+
+	.guide-intro {
+		max-width: 32em;
+		margin: 22px 0 0;
+		font: 19px/1.8 var(--scroll-brush);
+		text-wrap: pretty;
+	}
+
+	.guide blockquote {
+		margin: 38px 0 28px;
+		padding: clamp(16px, 4vw, 30px);
+		border-inline-start: 3px solid var(--accent);
+		background: var(--shade);
+		font-size: clamp(21px, 3.5vw, 32px);
+		line-height: 1.6;
+	}
+
+	.guide-points {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.guide-points li {
+		display: grid;
+		grid-template-columns: 44px 1fr;
+		gap: 8px;
+		padding: 19px 0;
+		border-bottom: 1px solid color-mix(in srgb, var(--ink) 17%, transparent);
+	}
+
+	.guide-number {
+		color: var(--accent);
+		font: 14px/1.9 ui-monospace, monospace;
+	}
+
+	.guide-points h3,
+	.guide-points p {
+		margin: 0;
+	}
+
+	.guide-points h3 {
+		font-size: 20px;
+		font-weight: 500;
+	}
+
+	.guide-points p {
+		margin-top: 5px;
+		font-family: var(--scroll-brush);
+	}
+
+	.guide-actions {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 16px;
+		margin-top: 25px;
+		font: 16px var(--scroll-brush);
+	}
+
+	.primary-link {
+		display: inline-flex;
+		align-items: center;
+		min-height: 44px;
+		padding: 0 16px;
+		border: 1px solid var(--accent);
+		border-radius: 5px;
+		color: var(--accent);
+		text-decoration: none;
+	}
+
+	.primary-link:hover {
+		background: var(--shade);
+	}
+
+	.reading {
+		padding-top: 38px;
+		border-top: 1px solid color-mix(in srgb, var(--ink) 22%, transparent);
+	}
+
+	.edition-note {
+		margin: 12px 0 22px;
+		font: 14px var(--scroll-brush);
+	}
+
+	.reader-index {
+		margin: 0 0 30px;
+		padding: 0 14px;
+		border: 1px solid color-mix(in srgb, var(--ink) 22%, transparent);
+		border-radius: 7px;
+		background: var(--shade);
+		font-family: var(--scroll-brush);
+	}
+
+	.reader-index summary {
+		min-height: 44px;
+		padding-block: 8px;
+		cursor: pointer;
+	}
+
+	.reader-index summary span {
+		margin-inline-start: 10px;
+		color: var(--accent);
+		font-size: 14px;
+	}
+
+	.volume-list {
+		max-height: min(380px, 46vh);
+		overflow: auto;
+		margin: 0 0 16px;
+		padding-inline-start: 1.6em;
+	}
+
+	.volume-list li {
+		margin-block: 0.28em;
+	}
+
+	.volume-list ul {
+		padding-inline-start: 1.15em;
+	}
+
+	.volume + .volume {
+		margin-top: 64px;
+	}
+
+	.volume-heading {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 14px;
+		padding-bottom: 10px;
+		border-bottom: 1px solid color-mix(in srgb, var(--ink) 22%, transparent);
+	}
+
+	.volume-heading h3 {
+		margin: 0;
+		font-weight: 400;
+	}
+
+	.volume-heading a {
+		flex-shrink: 0;
+		color: var(--accent);
+		font: 14px var(--scroll-brush);
+	}
+
+	.chapter {
+		margin-block: 26px;
+	}
+
+	.chapter :is(h3, h4) {
+		margin: 0 0 12px;
+		color: var(--accent);
+		font-size: clamp(20px, 3.5vw, 27px);
+		font-weight: 400;
+	}
+
+	.chapter p {
+		margin: 0 0 0.85em;
+		font-size: clamp(17px, 2vw, 20px);
+		line-height: 1.95;
+		overflow-wrap: anywhere;
+	}
+
+	.chapter .verse {
+		padding-inline-start: 1em;
+		border-inline-start: 1px solid color-mix(in srgb, var(--accent) 55%, transparent);
+		white-space: pre-line;
+	}
+
+	.chapter .byline {
+		color: var(--accent);
+		font-size: 15px;
+	}
+
+	.edition-credit {
+		margin-top: 48px;
+		padding: 18px 0;
+		border-top: 1px solid color-mix(in srgb, var(--ink) 22%, transparent);
+		font: 14px/1.75 var(--scroll-brush);
+	}
+
+	.edition-credit p {
+		margin: 0 0 8px;
+	}
+
+	.edition-credit a {
+		display: inline-block;
+		margin-inline-end: 14px;
+		color: var(--accent);
+	}
+
+	.reader-footer {
+		margin-top: 48px;
+		background: var(--shade);
+	}
+
+	.reader-footer nav {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		gap: 18px;
+		width: min(860px, calc(100% - 36px));
+		margin: 0 auto;
+		padding: 26px 0 45px;
+	}
+
+	.reader-footer span {
+		display: block;
+		color: var(--accent);
+		font: 14px var(--scroll-brush);
+	}
+
+	.gallery-return {
+		color: var(--accent);
+	}
+
+	.visually-hidden {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
+	}
+
+	@media (max-width: 600px) {
+		.reader-current {
+			display: none;
+		}
+	}
+</style>

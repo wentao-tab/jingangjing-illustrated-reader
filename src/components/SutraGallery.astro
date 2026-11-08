@@ -1,0 +1,414 @@
+---
+import { scrolls } from "../data/gallery";
+import { withBase } from "../utils/paths";
+---
+
+<main class="gallery app-view" data-view-panel="gallery" aria-labelledby="gallery-title" hidden>
+	<header class="gallery-intro">
+		<p class="gallery-kicker"><span aria-hidden="true">藏</span> 应作如是 · 藏经</p>
+		<h1 id="gallery-title">经卷画廊</h1>
+		<p class="gallery-description">朱砂落于素纸，莲影浮在靛青。循着十二卷的颜色与纹样，择一卷，读一段。</p>
+	</header>
+
+	<div class="gallery-index">
+		<h2>十二卷目录</h2>
+		<span>{scrolls.length} 部经典</span>
+	</div>
+
+	<ul class="scroll-grid">
+		{scrolls.map((scroll, index) => (
+			<li style={`--paper: ${scroll.paper}; --shade: ${scroll.shade}; --ink: ${scroll.ink}`}>
+				<button class="scroll-card" type="button" data-open-scroll={scroll.code} aria-haspopup="dialog">
+					<span class="scroll-cover" aria-hidden="true">
+						<span class="cover-number">{String(index + 1).padStart(2, "0")}</span>
+						<span class="cover-title">{scroll.shortTitle}</span>
+						<svg viewBox="0 0 480 300" focusable="false">
+							<rect x="14" y="14" width="452" height="272" rx="2" class="cover-border" />
+							<circle cx="244" cy="151" r="106" class="cover-halo" />
+							<path d={scroll.motif} class="cover-motif" />
+						</svg>
+						<span class="cover-seal">经</span>
+					</span>
+					<span class="scroll-caption">
+						<span>
+							<span class="scroll-title">{scroll.title}</span>
+							<span class="scroll-meta">{scroll.code} · {scroll.size}</span>
+						</span>
+						<span class="open-scroll" aria-hidden="true">展卷 <span>↗</span></span>
+					</span>
+					<span class="scroll-theme">{scroll.material} · {scroll.theme}</span>
+				</button>
+
+				<dialog id={`scroll-${scroll.code}`} class="scroll-dialog" aria-labelledby={`title-${scroll.code}`}>
+					<header class="scroll-heading">
+						<p>{scroll.code} · {scroll.size}</p>
+						<h2 id={`title-${scroll.code}`}>{scroll.title}</h2>
+						<form method="dialog">
+							<button class="close-scroll" type="submit" aria-label="关闭经卷" autofocus>×</button>
+						</form>
+					</header>
+					<div class="scroll-reading">
+						<p class="reading-label">经文选句</p>
+						<blockquote lang="zh-Hant">{scroll.quote}</blockquote>
+						<p class="reading-label">阅读导语</p>
+						<p class="reading-intro">{scroll.intro}</p>
+						<div class="reading-links">
+							{scroll.code === "T0235" && (
+								<a href={withBase("/")} target="_blank" rel="noopener">读金刚经配图版 ↗</a>
+							)}
+							<a href={`https://cbetaonline.dila.edu.tw/zh/${scroll.code}`} target="_blank" rel="noopener">读 CBETA 原典 ↗</a>
+						</div>
+					</div>
+				</dialog>
+			</li>
+		))}
+	</ul>
+
+	<footer class="gallery-credit">
+		展陈构思参考 <a href="https://rushiwowen.co/gallery" target="_blank" rel="noopener">如是我闻 · 经卷画廊 ↗</a>
+	</footer>
+</main>
+
+<script>
+	document.querySelectorAll<HTMLButtonElement>("[data-open-scroll]").forEach((button) => {
+		const scroll = document.getElementById(`scroll-${button.dataset.openScroll}`);
+		if (!(scroll instanceof HTMLDialogElement)) return;
+		button.addEventListener("click", () => scroll.showModal());
+	});
+</script>
+
+<style>
+	.gallery {
+		width: min(1100px, 100%);
+		margin: 0 auto;
+		padding: clamp(40px, 6vw, 84px) clamp(6px, 2vw, 26px) 84px;
+		-webkit-font-smoothing: antialiased;
+	}
+
+	.gallery[hidden] {
+		display: none;
+	}
+
+	.gallery-intro {
+		margin: 0 auto clamp(36px, 6vw, 68px);
+		text-align: center;
+	}
+
+	.gallery-kicker {
+		display: inline-flex;
+		align-items: center;
+		gap: 10px;
+		margin: 0;
+		color: var(--ask-primary-dark);
+		font: 14px var(--ask-antique-font);
+		letter-spacing: 0.14em;
+	}
+
+	.gallery-kicker span {
+		display: grid;
+		place-items: center;
+		width: 24px;
+		height: 24px;
+		border: 1px solid currentColor;
+		border-radius: 3px;
+		letter-spacing: 0;
+	}
+
+	.gallery h1 {
+		margin: 16px 0;
+		font: 400 clamp(42px, 6.4vw, 76px)/1.15 var(--ask-ming-font);
+		letter-spacing: 0.09em;
+		text-wrap: balance;
+	}
+
+	.gallery-description {
+		max-width: 35em;
+		margin: 0 auto;
+		color: var(--ask-muted);
+		font: 17px/1.8 var(--ask-antique-font);
+		text-wrap: balance;
+	}
+
+	.gallery-index {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 12px;
+		margin-bottom: 18px;
+		padding-bottom: 12px;
+		border-bottom: 1px solid var(--ask-line);
+		color: var(--ask-muted);
+	}
+
+	.gallery-index h2 {
+		margin: 0;
+		color: var(--ask-ink);
+		font: 400 20px var(--ask-ming-font);
+	}
+
+	.gallery-index span {
+		font: 13px var(--ask-antique-font);
+	}
+
+	.scroll-grid {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: clamp(26px, 4vw, 50px) clamp(20px, 3vw, 34px);
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.scroll-card {
+		display: block;
+		width: 100%;
+		padding: 0;
+		border: 0;
+		background: transparent;
+		color: inherit;
+		text-align: start;
+		cursor: pointer;
+	}
+
+	.scroll-cover,
+	.scroll-heading {
+		background:
+			repeating-linear-gradient(92deg, transparent 0 3px, color-mix(in srgb, var(--ink) 4%, transparent) 4px 5px),
+			linear-gradient(145deg, var(--paper), var(--shade));
+		color: var(--ink);
+	}
+
+	.scroll-cover {
+		display: block;
+		position: relative;
+		overflow: hidden;
+		aspect-ratio: 12 / 7;
+		border-radius: 10px;
+		outline: 1px solid rgb(0 0 0 / 0.1);
+		outline-offset: -1px;
+		transition: box-shadow 200ms ease, transform 200ms ease;
+	}
+
+	:global(.theme-dark) .scroll-cover {
+		outline-color: rgb(255 255 255 / 0.1);
+	}
+
+	.scroll-cover svg {
+		display: block;
+		width: 100%;
+		height: 100%;
+		fill: none;
+		stroke: currentColor;
+	}
+
+	.cover-border,
+	.cover-halo {
+		stroke-width: 0.8;
+		opacity: 0.42;
+	}
+
+	.cover-halo {
+		stroke-dasharray: 2 4;
+	}
+
+	.cover-motif {
+		stroke-width: 1.65;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+	}
+
+	.cover-title,
+	.cover-number,
+	.cover-seal {
+		position: absolute;
+	}
+
+	.cover-title {
+		top: 20%;
+		left: 10%;
+		writing-mode: vertical-rl;
+		font: 400 clamp(18px, 2.6vw, 32px)/1 var(--ask-ming-font);
+		letter-spacing: 0.16em;
+	}
+
+	.cover-number {
+		top: 11%;
+		right: 9%;
+		font: 14px var(--ask-mono-font);
+		font-variant-numeric: tabular-nums;
+	}
+
+	.cover-seal {
+		right: 9%;
+		bottom: 13%;
+		padding: 3px 4px;
+		border: 1px solid currentColor;
+		border-radius: 2px;
+		font: 12px/1 var(--ask-ming-font);
+	}
+
+	.scroll-caption {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 12px;
+		margin-top: 14px;
+	}
+
+	.scroll-title {
+		display: block;
+		margin: 0 0 5px;
+		font: 400 clamp(19px, 2vw, 25px)/1.38 var(--ask-ming-font);
+		text-wrap: balance;
+	}
+
+	.scroll-meta,
+	.scroll-theme {
+		display: block;
+		margin: 0;
+		color: var(--ask-muted);
+		font: 14px/1.5 var(--ask-antique-font);
+	}
+
+	.scroll-theme {
+		margin-top: 7px;
+	}
+
+	.open-scroll {
+		color: var(--ask-primary-dark);
+		font: 14px var(--ask-antique-font);
+		white-space: nowrap;
+	}
+
+	.open-scroll span {
+		display: inline-block;
+		transition: transform 180ms ease;
+	}
+
+	.scroll-card:hover .scroll-cover {
+		box-shadow: 0 12px 24px -15px var(--ask-muted);
+		transform: translateY(-2px);
+	}
+
+	.scroll-card:hover .open-scroll span {
+		transform: translate(2px, -2px);
+	}
+
+	.scroll-card:active .scroll-cover {
+		transform: scale(0.96);
+	}
+
+	.gallery :is(button, a):focus-visible {
+		outline: 2px solid var(--ask-primary);
+		outline-offset: 4px;
+	}
+
+	.scroll-dialog {
+		width: min(560px, calc(100% - 32px));
+		max-height: calc(100dvh - 32px);
+		padding: 0;
+		border: 1px solid var(--ask-line);
+		border-radius: 16px;
+		background: var(--ask-surface);
+		color: var(--ask-ink);
+		box-shadow: var(--ask-shadow);
+	}
+
+	.scroll-dialog::backdrop {
+		background: rgb(16 20 18 / 0.62);
+	}
+
+	.scroll-heading {
+		position: relative;
+		padding: 28px 66px 26px 26px;
+	}
+
+	.scroll-heading p {
+		margin: 0 0 8px;
+		font: 14px var(--ask-antique-font);
+	}
+
+	.scroll-heading h2 {
+		margin: 0;
+		font: 400 clamp(24px, 4vw, 34px)/1.35 var(--ask-ming-font);
+		text-wrap: balance;
+	}
+
+	.close-scroll {
+		position: absolute;
+		top: 12px;
+		right: 12px;
+		width: 44px;
+		height: 44px;
+		padding: 0;
+		border: 1px solid currentColor;
+		border-radius: 50%;
+		background: transparent;
+		color: inherit;
+		font-size: 24px;
+		cursor: pointer;
+	}
+
+	.scroll-reading {
+		padding: 24px clamp(20px, 5vw, 34px) 30px;
+	}
+
+	.reading-label {
+		margin: 0;
+		color: var(--ask-primary-dark);
+		font: 14px var(--ask-antique-font);
+		letter-spacing: 0.08em;
+	}
+
+	.scroll-reading blockquote {
+		margin: 10px 0 24px;
+		padding-left: 14px;
+		border-left: 1px solid var(--ask-accent);
+		font: 400 clamp(21px, 4vw, 26px)/1.65 var(--ask-ming-font);
+	}
+
+	.reading-intro {
+		margin: 8px 0 18px;
+		font: 16px/1.75 var(--ask-antique-font);
+	}
+
+	.reading-links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 6px 16px;
+	}
+
+	.reading-links a,
+	.gallery-credit a {
+		color: var(--ask-primary-dark);
+		text-underline-offset: 4px;
+	}
+
+	.reading-links a {
+		display: inline-flex;
+		align-items: center;
+		min-height: 44px;
+	}
+
+	.gallery-credit {
+		margin-top: 54px;
+		padding-top: 20px;
+		border-top: 1px solid var(--ask-line);
+		color: var(--ask-muted);
+		font: 14px/1.6 var(--ask-antique-font);
+		text-align: center;
+	}
+
+	@media (max-width: 680px) {
+		.scroll-grid {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.scroll-cover,
+		.open-scroll span {
+			transition: none;
+		}
+	}
+</style>
